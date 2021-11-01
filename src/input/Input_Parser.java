@@ -104,7 +104,7 @@ public class Input_Parser {
 		for (int i=2;i<4;i++) {
 			tmp+=in[i];
 		}
-		res.append("Taille Total du packet IP: "+Integer.parseInt(tmp,16)+" octet (0x"+tmp+"\n");
+		res.append("Taille Total du packet IP: "+Integer.parseInt(tmp,16)+" octet (0x"+tmp+")\n");
 		//Fin Analyse Taille Total et Debut Analyse Fragmentation
 		tmp ="";
 		for (int i=4;i<6;i++) {
@@ -153,7 +153,32 @@ public class Input_Parser {
 		}else if (Integer.parseInt(tmp,16)==17) {
 			res.append("Protocol : 17 (UDP) (0x"+tmp+")\n");
 		}else {throw new RuntimeException("Protocol: "+Integer.parseInt(tmp,16)+" pas au Programme");}
-		
+		//Fin analyse protocol Debut Analyse Checksum
+		tmp ="";
+		for (int i=10;i<12;i++) {
+			tmp+=in[i];
+		}
+		res.append("Checksum (Non verifiable): 0x"+tmp+"\n");
+		//Fin analyse protocole Debut analyse Dest/Source
+		tmp ="";
+		StringBuilder ip=new StringBuilder();
+		//source
+		for (int i=12;i<16;i++) {
+			tmp=in[i];
+			ip.append(Integer.parseInt(tmp,16)+".");
+		}
+		ip.delete(ip.length()-1, ip.length());
+		res.append("Adresse IP Source: "+ip.toString()+"\n");
+		tmp ="";
+		ip=new StringBuilder();
+		//Destination
+		for (int i=16;i<20;i++) {
+			tmp=in[i];
+			ip.append(Integer.parseInt(tmp,16)+".");
+		}
+		ip.delete(ip.length()-1, ip.length());
+		res.append("Adresse IP Destination: "+ip.toString()+"\n");
+		//Fin analyse IP Header!
 		return res.toString();
 	}
 	
