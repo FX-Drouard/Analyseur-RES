@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author fxhbb
- *
- */
-module reseau {
-}
