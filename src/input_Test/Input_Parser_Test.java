@@ -13,7 +13,9 @@ public class Input_Parser_Test {
 		System.out.println("\n\nTram Analysée:");
 		System.out.println("\n\nEthernet:");
 		System.out.println(Input_Parser.ethernetToString(ethernet));
-		
+		String[] ipH=Input_Parser.ipHData(tmp);
+		System.out.println("\nIP Header:");
+		System.out.println(Input_Parser.ipHToString(ipH));
 	}
 	
 }

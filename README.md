@@ -6,4 +6,7 @@
 	le fichier est soit en 1 ligne soit en plusieur avec le block de taille avant
 ### Question 3: y'a t'il autre chose que IPV4 ou IPV6 ?
 	oui
-	
+### Question 4: on doit dire quoi sur le TOS?
+	a posé
+### Question 5: on doit faire ICMP?
+	a posé
