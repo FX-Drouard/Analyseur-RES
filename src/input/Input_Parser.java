@@ -184,19 +184,17 @@ public class Input_Parser {
 	
 	public static String protocolenameToString(String[] in) {
 		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
-		StringBuilder res= new StringBuilder();
 		String tmp ="";
 		for (int i=9;i<10;i++) {
 			tmp+=in[i];
 		}
 		if (Integer.parseInt(tmp,16)==1) {
-			res.append("ICMP");
+			return "ICMP";
 		}else if (Integer.parseInt(tmp,16)==6) {
-			res.append("TCP");
+			return "TCP";
 		}else if (Integer.parseInt(tmp,16)==17) {
-			res.append("UDP");
+			return "UDP";
 		}else {throw new RuntimeException("Protocol: "+Integer.parseInt(tmp,16)+" pas au Programme");}
-		return res.toString();
 	}
 	
 }

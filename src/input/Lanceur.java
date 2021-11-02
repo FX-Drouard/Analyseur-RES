@@ -33,10 +33,19 @@ public class Lanceur {
 	public String brutToString() {
 		return select;
 	}
+	public String protocoleToString() {
+		return "TODO";
+	}
+	public String dToString() {
+		return "TODO";
+	}
 	public String protocolNameToString() {
 		String[] tmp=Input_Parser.split(select);
 		String[] ipH=Input_Parser.ipHData(tmp);
 		return Input_Parser.protocolenameToString(ipH);
+	}
+	public String dNameToString() {
+		return "DNS";
 	}
 	public int nbChoix() {
 		//a changer

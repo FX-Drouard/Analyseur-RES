@@ -85,19 +85,29 @@ public class Gui {
 		Trame.add(choice);
 		
 		JTextPane Brut = new JTextPane();
-		Brut.setText(la.brutToString());
+		Brut.setEditable(false);
+		Brut.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
 		tabbedPane.addTab("Trame Brut", null, Brut, null);
 		
 		JTextPane Ethernet = new JTextPane();
-		Ethernet.setText(la.ethernetToString());
+		Ethernet.setEditable(false);
+		Ethernet.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
 		tabbedPane.addTab("Ethernet", null, Ethernet, null);
 		
 		JTextPane IP = new JTextPane();
-		IP.setText(la.ipHToString());
+		IP.setEditable(false);
+		IP.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
 		tabbedPane.addTab("IP", null, IP, null);
 		
 		JTextPane Protocole = new JTextPane();
+		Protocole.setEditable(false);
+		Protocole.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
 		tabbedPane.addTab(la.protocolNameToString(), null, Protocole, null);
+		
+		JTextPane lesD = new JTextPane();
+		lesD.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
+		lesD.setEditable(false);
+		tabbedPane.addTab("DNS/DHCP", null, lesD, null);
 		
 		Button bouton = new Button("Valider");
 		bouton.setForeground(new Color(255, 255, 255));
@@ -112,7 +122,15 @@ public class Gui {
 				IP.setText(la.ipHToString());
 				Ethernet.setText(la.ethernetToString());
 				Brut.setText(la.brutToString());
+				Protocole.setText(la.protocoleToString());
 				tabbedPane.setTitleAt(4,la.protocolNameToString());
+				if (la.protocolNameToString().equals("UDP")) {
+					tabbedPane.setTitleAt(5,la.dNameToString());
+					lesD.setText(la.dToString());
+				}else {
+					tabbedPane.setTitleAt(5,"DNS/DCHP non present");
+					lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
+				}
 				Question.info("Trame: "+(a+1)+" Chargée avec succes!");
 			}
 		});
@@ -124,7 +142,7 @@ public class Gui {
 				int a=choice.getSelectedIndex();
 				int b=la.getActuel();
 				la.setectData(a);
-				String pathi=Question.getrep("Mettez le path exacte du fichier a ecrire (à default nous ecrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
+				String pathi=Question.getrep("Mettez le path exacte du fichier à écrire (à default nous écrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
 				//mettre ici la suite des comandes pour imprimer
 				la.setectData(b);
 			}
