@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SpringLayout;
 import java.awt.Window.Type;
+import java.awt.SystemColor;
+import java.awt.Color;
 
 public class Gui {
 
@@ -98,6 +100,8 @@ public class Gui {
 		tabbedPane.addTab(la.protocolNameToString(), null, Protocole, null);
 		
 		Button bouton = new Button("Valider");
+		bouton.setForeground(new Color(255, 255, 255));
+		bouton.setBackground(new Color(0, 128, 0));
 		sl_Trame.putConstraint(SpringLayout.NORTH, bouton, 0, SpringLayout.NORTH, choice);
 		sl_Trame.putConstraint(SpringLayout.WEST, bouton, 27, SpringLayout.EAST, choice);
 		sl_Trame.putConstraint(SpringLayout.EAST, bouton, -243, SpringLayout.EAST, Trame);
@@ -113,6 +117,23 @@ public class Gui {
 			}
 		});
 		Trame.add(bouton);
+		
+		Button printer = new Button("Analyse to file");
+		printer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int a=choice.getSelectedIndex();
+				int b=la.getActuel();
+				la.setectData(a);
+				String pathi=Question.getrep("Mettez le path exacte du fichier a ecrire (à default nous ecrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
+				//mettre ici la suite des comandes pour imprimer
+				la.setectData(b);
+			}
+		});
+		printer.setBackground(SystemColor.activeCaption);
+		sl_Trame.putConstraint(SpringLayout.NORTH, printer, 0, SpringLayout.NORTH, choice);
+		sl_Trame.putConstraint(SpringLayout.WEST, printer, -412, SpringLayout.EAST, bouton);
+		sl_Trame.putConstraint(SpringLayout.SOUTH, printer, 0, SpringLayout.SOUTH, bouton);
+		sl_Trame.putConstraint(SpringLayout.EAST, printer, -26, SpringLayout.WEST, choice);
+		Trame.add(printer);
 	}
-
 }
