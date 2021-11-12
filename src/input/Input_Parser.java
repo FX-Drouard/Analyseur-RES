@@ -35,7 +35,17 @@ public class Input_Parser {
 	}
 	
 	public static String[] splitOffSet(String in) {
-		return in.split("0000");
+		String[] tmp;
+		String[] res;
+		tmp=in.split("0000");//attention pb sur exemple4
+		if (tmp.length==1) {
+			return tmp;
+		}
+		res=new String[tmp.length-1];
+		for (int i =1;i<tmp.length;i++) {
+			res[i-1]=tmp[i];
+		}
+		return res;
 	}
 	
 	public static String[] backToSpace(String[] in) {
@@ -95,7 +105,6 @@ public class Input_Parser {
 	
 	public static String[][] filterCall(String in){
 		String[]tmp=splitOffSet(in);
-		System.out.println(tmp.length);
 		String[]restmp;
 		String[][]res;
 		restmp=backToSpace(tmp);

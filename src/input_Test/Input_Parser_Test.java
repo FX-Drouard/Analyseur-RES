@@ -9,11 +9,13 @@ public class Input_Parser_Test {
 	private static int choix=0;
 	
 	public static void main(String args[]) throws IOException{
-		String path = "data/exemple5.txt";
+		String path = "data/exemple4.txt";
 		la=new Lanceur(path);
 		String [][] temp=Input_Parser.parse(path);
 		System.out.println("\n");
 		System.out.println(temp.length);
+		System.out.println("\n");
+		System.out.println(la.brutToString());
 		//System.out.println(la.brutToString());
 		/*String[] tmp=Input_Parser.split(res);
 		String[] ethernet=Input_Parser.ethernetData(tmp);

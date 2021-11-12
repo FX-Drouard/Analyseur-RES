@@ -20,7 +20,12 @@ import javax.swing.SpringLayout;
 import java.awt.Window.Type;
 import java.awt.SystemColor;
 import java.awt.Color;
+import javax.swing.JScrollPane;
 
+/**
+ * Cette classe permet de crée des interfaces plus pousser que son homologue "Question" | Version V1.0.1
+ * @author François-Xavier Drouard  
+ */
 public class Gui {
 
 	private JFrame frmAnalyserReseau;
@@ -35,8 +40,8 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple2.txt");
-					String path = "data/exemple5.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
+					//String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple6.txt");
+					String path = "data/exemple6.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					la=new Lanceur(path);//a changer
 					Gui window = new Gui(path);
 					window.frmAnalyserReseau.setVisible(true);
@@ -84,30 +89,45 @@ public class Gui {
 		}
 		Trame.add(choice);
 		
+		JScrollPane bigBrut = new JScrollPane();
+		tabbedPane.addTab("Brut", null, bigBrut, null);
+		
 		JTextPane Brut = new JTextPane();
+		bigBrut.setViewportView(Brut);
 		Brut.setEditable(false);
 		Brut.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
-		tabbedPane.addTab("Trame Brut", null, Brut, null);
+		
+		JScrollPane bigEthernet = new JScrollPane();
+		tabbedPane.addTab("Ethernet", null, bigEthernet, null);
 		
 		JTextPane Ethernet = new JTextPane();
-		Ethernet.setEditable(false);
+		bigEthernet.setViewportView(Ethernet);
 		Ethernet.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
-		tabbedPane.addTab("Ethernet", null, Ethernet, null);
+		Ethernet.setEditable(false);
+		
+		JScrollPane bigIP = new JScrollPane();
+		tabbedPane.addTab("IP", null, bigIP, null);
 		
 		JTextPane IP = new JTextPane();
-		IP.setEditable(false);
+		bigIP.setViewportView(IP);
 		IP.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
-		tabbedPane.addTab("IP", null, IP, null);
+		IP.setEditable(false);
+		
+		JScrollPane bigProtocol = new JScrollPane();
+		tabbedPane.addTab("Protocole", null, bigProtocol, null);
 		
 		JTextPane Protocole = new JTextPane();
+		bigProtocol.setViewportView(Protocole);
 		Protocole.setEditable(false);
 		Protocole.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
-		tabbedPane.addTab(la.protocolNameToString(), null, Protocole, null);
+		
+		JScrollPane biglesD = new JScrollPane();
+		tabbedPane.addTab("DNS/DHCP", null, biglesD, null);
 		
 		JTextPane lesD = new JTextPane();
+		biglesD.setViewportView(lesD);
 		lesD.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
 		lesD.setEditable(false);
-		tabbedPane.addTab("DNS/DHCP", null, lesD, null);
 		
 		Button bouton = new Button("Valider");
 		bouton.setForeground(new Color(255, 255, 255));
@@ -153,5 +173,16 @@ public class Gui {
 		sl_Trame.putConstraint(SpringLayout.SOUTH, printer, 0, SpringLayout.SOUTH, bouton);
 		sl_Trame.putConstraint(SpringLayout.EAST, printer, -26, SpringLayout.WEST, choice);
 		Trame.add(printer);
+		
+		Button credits = new Button("Credits");
+		credits.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Question.info("Ce programme à été codé par:\n Xia Alexandre 28604113 \n et\n Drouard François-Xavier 3800028\n Pour Sorbonne Science UE LU3IN033 2021-2022");
+			}
+		});
+		sl_Trame.putConstraint(SpringLayout.NORTH, credits, 45, SpringLayout.SOUTH, choice);
+		sl_Trame.putConstraint(SpringLayout.WEST, credits, 0, SpringLayout.WEST, choice);
+		sl_Trame.putConstraint(SpringLayout.EAST, credits, 0, SpringLayout.EAST, choice);
+		Trame.add(credits);
 	}
 }
