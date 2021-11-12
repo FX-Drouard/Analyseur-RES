@@ -36,7 +36,7 @@ public class Gui {
 			public void run() {
 				try {
 					//String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple2.txt");
-					String path = "data/exemple.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
+					String path = "data/exemple5.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					la=new Lanceur(path);//a changer
 					Gui window = new Gui(path);
 					window.frmAnalyserReseau.setVisible(true);

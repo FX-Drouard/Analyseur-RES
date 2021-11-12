@@ -8,17 +8,18 @@ import java.io.IOException;
 
 public class Input_Parser {
 	private Input_Parser(String fileName) {}
-	public static String parse(String fileName) throws IOException {//Lis le fichier
+	public static String[][] parse(String fileName) throws IOException {//Lis le fichier
 		BufferedReader br = null;
-		String res="";
+		StringBuilder res=new StringBuilder();
 		try{
 			br = new BufferedReader(new FileReader(fileName));
-			//String line;
-			//while((line=br.readLine())!=null) {
+			String line;
+			while((line=br.readLine())!=null) {
 				//String[] buffer=line.split(" ");
-			//}
-			res=br.readLine();//on suppose que la trame se lit en 1 ligne
-			if (res==null) {throw new RuntimeException("Erreur fichier vide!");}
+				res.append(line);
+			}
+			//res=br.readLine();//on suppose que la trame se lit en 1 ligne
+			//if (res==null) {throw new RuntimeException("Erreur fichier vide!");}
 			
 		}catch (IOException io) {
 			System.out.println("Erreur sur la lecture du fichier\n");
@@ -29,11 +30,83 @@ public class Input_Parser {
 				br.close();
 			}
 		}
-		return res.toLowerCase();
+		String[][] allres=filterCall(res.toString().toLowerCase());
+		return allres;
 	}
+	
+	public static String[] splitOffSet(String in) {
+		return in.split("0000");
+	}
+	
+	public static String[] backToSpace(String[] in) {
+		String[] res=in;
+		String tmp;
+		//On parcourt chaque case du tableau
+		for(int i=0;i<in.length;i++) {
+			tmp=in[i];
+			StringBuilder news= new StringBuilder();
+			//On parcourt chaque chaine et change les retours a ligne en espace
+			for(int j=0;j<tmp.length();j++) {
+				if(tmp.charAt(j)=='\n') {
+					news.append(' ');
+				}else {
+					news.append(tmp.charAt(j));
+				}
+			}
+			res[i]=news.toString();
+		}
+		return res;
+	}
+	
 	public static String[] split(String in) {
 		return in.split(" ");
 	}
+	
+	public static String[] filterPacket(String[] in) {
+		String[] res=in;
+		String tmp;
+		for(int i=0;i<in.length;i++) {
+			tmp=in[i];
+			String[] tsplit= tmp.split(" ");
+			StringBuilder news= new StringBuilder();
+			for(int j=0; j<tsplit.length-1;j++) {
+				if(tsplit[j]!="" && tsplit[j].length()==2) {
+					news.append(tsplit[j]+" ");
+				}
+			}
+			if(tsplit[tsplit.length-1]!="" && tsplit[tsplit.length-1].length()==2) {
+				news.append(tsplit[tsplit.length-1]);
+			}
+			res[i]=news.toString();
+		}
+		return res;
+	}
+	
+	public static String[][] filterAllSpace(String[] in) {
+		String[][] res= new String[in.length][];
+		String tmp;
+		for(int i=0;i<in.length;i++) {
+			tmp=in[i];
+			res[i]=tmp.split(" ");
+		}
+		return res;
+		
+	}
+	
+	public static String[][] filterCall(String in){
+		String[]tmp=splitOffSet(in);
+		System.out.println(tmp.length);
+		String[]restmp;
+		String[][]res;
+		restmp=backToSpace(tmp);
+		tmp=filterPacket(restmp);
+		res=filterAllSpace(tmp);
+		return res;
+		
+	}
+	
+	
+	
 	public static String[] ethernetData(String[] in) {
 		String[] res= new String[14];
 		for (int i=0;i<14;i++) {
@@ -43,7 +116,7 @@ public class Input_Parser {
 	}
 	
 	public static String ethernetToString(String[] in) throws RuntimeException{
-		if (in.length!=14) {throw new RuntimeException("Appel erroné ethernetToString");}
+		if (in.length!=14) {throw new RuntimeException("Appel erronÃ© ethernetToString");}
 		StringBuilder res= new StringBuilder();
 		res.append("Destination: ");
 		for (int i=0;i<6;i++) {
@@ -80,7 +153,7 @@ public class Input_Parser {
 	}
 	
 	public static String ipHToString(String[] in) throws RuntimeException{
-		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
+		if (in.length!=20) {throw new RuntimeException("Appel erronÃ© ipHToString");}
 		StringBuilder res= new StringBuilder();
 		String tmp=in[0];
 		//Debut analyse Version
@@ -93,12 +166,12 @@ public class Input_Parser {
 		//Fin Analyse Version et Debut Analyse Taille
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		if (tailleH==5) {
-			res.append("Taille de l'entete (aucune option specifiée): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
+			res.append("Taille de l'entete (aucune option specifiÃ©e): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
 		}else if (tailleH>5){
 			res.append("\n Taille de l'entete avec option: "+tailleH*4+" \n");
 		}else {throw new RuntimeException("Taille de l'entete totalement invalide!");}
 		//Fin Analyse Taille et Debut Analyse TOS
-		res.append("TOS: Non Utilisé dans notre cadre: 0x"+in[1]+"\n");
+		res.append("TOS: Non UtilisÃ© dans notre cadre: 0x"+in[1]+"\n");
 		//Fin Analyse TOS et Debut Analyse Taille total
 		tmp ="";
 		for (int i=2;i<4;i++) {
@@ -127,14 +200,14 @@ public class Input_Parser {
 		for (int i=0;i<3;i++) {
 			flags+=bin.charAt(i);
 		}
-		res.append("Flags\n    Champ Réservé: "+flags.charAt(0)+"\n    Champ DF: "+flags.charAt(1)+"\n    Champ MF: "+flags.charAt(2)+"\n");
+		res.append("Flags\n    Champ RÃ©servÃ©: "+flags.charAt(0)+"\n    Champ DF: "+flags.charAt(1)+"\n    Champ MF: "+flags.charAt(2)+"\n");
 		int offset;
 		{String off="";
 		for (int i=3;i<bin.length();i++) {
 			off+=bin.charAt(i);
 		}
 		offset=Integer.parseInt(off,2);}
-		if (offset==0) {res.append("Offset : 0, Paquet non Fragmenté\n");}else {res.append("Offset: "+offset+" Paquet Fragmenté\n");}
+		if (offset==0) {res.append("Offset : 0, Paquet non FragmentÃ©\n");}else {res.append("Offset: "+offset+" Paquet FragmentÃ©\n");}
 		//Fin analyse Offset+flags Debut analyse TTL
 		tmp ="";
 		for (int i=8;i<9;i++) {
@@ -183,7 +256,7 @@ public class Input_Parser {
 	}
 	
 	public static String protocolenameToString(String[] in) {
-		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
+		if (in.length!=20) {throw new RuntimeException("Appel erronÃ© ipHToString");}
 		String tmp ="";
 		for (int i=9;i<10;i++) {
 			tmp+=in[i];
