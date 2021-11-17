@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.io.IOException;
 
 import input.*;
+import output.output_parser;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -163,7 +164,13 @@ public class Gui {
 				int b=la.getActuel();
 				la.setectData(a);
 				String pathi=Question.getrep("Mettez le path exacte du fichier à écrire (à default nous écrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
-				//mettre ici la suite des comandes pour imprimer
+				String txt="Trame n°"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard François-Xavier et Xia Alexandre.";
+				try{
+					String wrep=output_parser.writer(pathi, txt);
+					Question.info("Fichier ecrit dans: \""+wrep+"\"avec succes!");
+				}catch (IOException s) {
+					Question.warn("Erreur sur l'ecriture du fichier!");
+				}
 				la.setectData(b);
 			}
 		});

@@ -10,8 +10,6 @@ public class Lanceur {
 		this.setectData(0);
 	}
 	public void setectData(int choix) {
-		//a changer
-		
 		select=datas[choix];
 		actuel=choix;
 	}
