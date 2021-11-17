@@ -44,7 +44,7 @@ public class Lanceur {
 		return Input_Parser.protocolenameToString(ipH);
 	}
 	public String dNameToString() {
-		return "DNS";
+		return "DHCP";
 	}
 	public int nbChoix() {
 		

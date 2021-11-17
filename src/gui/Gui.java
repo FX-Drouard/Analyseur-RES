@@ -24,7 +24,7 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 
 /**
- * Cette classe permet de crée des interfaces plus pousser que son homologue "Question" | Version V1.0.1
+ * Cette classe permet de crée des interfaces plus poussée que son homologue "Question" | Version V1.0.2
  * @author François-Xavier Drouard  
  */
 public class Gui {
@@ -41,8 +41,8 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple6.txt");
-					String path = "data/exemple7.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
+					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple6.txt");
+					//String path = "data/exemple7.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					la=new Lanceur(path);//a changer
 					Gui window = new Gui(path);
 					window.frmAnalyserReseau.setVisible(true);
