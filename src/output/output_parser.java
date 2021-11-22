@@ -15,7 +15,7 @@ public class output_parser {
 			   // créer le fichier s'il n'existe pas
 			   while (file.exists()) {
 				   i++;
-				   pathok = path.split(".txt")[0]+"("+i+")";
+				   pathok = path.split(".txt")[0]+"_"+i;
 				   file = new File(pathok+".txt");
 			   }
 			   file.createNewFile();

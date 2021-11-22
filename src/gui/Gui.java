@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.EventQueue;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import input.*;
@@ -31,7 +32,6 @@ public class Gui {
 
 	private JFrame frmAnalyserReseau;
 	private static Lanceur la;
-	private static int choix=0;
 
 	/**
 	 * Lance La fenetre et Appel Lanceur de Input et demande avant le path du fichier a analysé.
@@ -41,13 +41,20 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple6.txt");
+					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple7.txt");
 					//String path = "data/exemple7.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
-					la=new Lanceur(path);//a changer
-					Gui window = new Gui(path);
-					window.frmAnalyserReseau.setVisible(true);
+					try{
+						la=new Lanceur(path);
+						Gui window = new Gui(path);
+						window.frmAnalyserReseau.setVisible(true);//a changer
+					}catch (FileNotFoundException e) {
+						Question.warn(e.toString());
+						return;
+					}
+					
 				} catch (Exception e) {
 					e.printStackTrace();
+					Question.warn(e.toString());
 				}
 			}
 		});

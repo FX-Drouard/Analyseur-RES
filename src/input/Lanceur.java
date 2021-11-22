@@ -1,11 +1,12 @@
 package input;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Lanceur {
 	private final String[][] datas;
 	private String [] select;
 	private int actuel;
-	public Lanceur(String path) throws IOException {
+	public Lanceur(String path) throws IOException,FileNotFoundException {
 		this.datas=Input_Parser.parse(path);
 		this.setectData(0);
 	}
@@ -34,7 +35,11 @@ public class Lanceur {
 		return res;
 	}
 	public String protocoleToString() {
-		return "TODO";
+		if (Input_Parser.protocolenameToString(Input_Parser.ipHData(select)).equals("UDP")) {
+			return "TODO";
+		}else {
+			return "Le Protocole: \""+Input_Parser.protocolenameToString(Input_Parser.ipHData(select))+"\" n'est pas pris en charge par ce projet!";
+		}
 	}
 	public String dToString() {
 		return "TODO";

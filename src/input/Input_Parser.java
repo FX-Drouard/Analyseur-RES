@@ -1,6 +1,7 @@
 package input;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -8,7 +9,7 @@ import java.io.IOException;
 
 public class Input_Parser {
 	private Input_Parser(String fileName) {}
-	public static String[][] parse(String fileName) throws IOException {//Lis le fichier
+	public static String[][] parse(String fileName) throws IOException,FileNotFoundException {//Lis le fichier
 		BufferedReader br = null;
 		StringBuilder res=new StringBuilder();
 		try{
@@ -21,6 +22,8 @@ public class Input_Parser {
 			//res=br.readLine();//on suppose que la trame se lit en 1 ligne
 			//if (res==null) {throw new RuntimeException("Erreur fichier vide!");}
 			
+		}catch (FileNotFoundException e){
+			throw e;
 		}catch (IOException io) {
 			System.out.println("Erreur sur la lecture du fichier\n");
 			io.printStackTrace();
@@ -234,6 +237,36 @@ public class Input_Parser {
 			res.append("Protocol : 6 (TCP) (0x"+tmp+")\n");
 		}else if (Integer.parseInt(tmp,16)==17) {
 			res.append("Protocol : 17 (UDP) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==2) {
+			res.append("Protocol : 2 (IGMP) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==3) {
+			res.append("Protocol : 3 (GGP) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==4) {
+			res.append("Protocol : 4 (IP-in-IP) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==5) {
+			res.append("Protocol : 5 (ST) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==7) {
+			res.append("Protocol : 7 (CBT) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==8) {
+			res.append("Protocol : 8 (EGP) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==9) {
+			res.append("Protocol : 9 (IGP) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==10) {
+			res.append("Protocol : 10 (BBN-RCC-MON) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==11) {
+			res.append("Protocol : 11 (NVP-II) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==12) {
+			res.append("Protocol : 12 (PUP) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==13) {
+			res.append("Protocol : 13 (ARGUS) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==14) {
+			res.append("Protocol : 14 (EMCON) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==15) {
+			res.append("Protocol : 15 (XNET) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==16) {
+			res.append("Protocol : 16 (CHAOS) (0x"+tmp+")\n");
+		}else if (Integer.parseInt(tmp,16)==0) {
+			res.append("Protocol : 0 (HOPOPT) (0x"+tmp+")\n");
 		}else {throw new RuntimeException("Protocol: "+Integer.parseInt(tmp,16)+" pas au Programme");}
 		//Fin analyse protocol Debut Analyse Checksum
 		tmp ="";
@@ -276,6 +309,36 @@ public class Input_Parser {
 			return "TCP";
 		}else if (Integer.parseInt(tmp,16)==17) {
 			return "UDP";
+		}else if (Integer.parseInt(tmp,16)==2) {
+			return "IGMP";
+		}else if (Integer.parseInt(tmp,16)==3) {
+			return "GGP";
+		}else if (Integer.parseInt(tmp,16)==4) {
+			return "IP-in-IP";
+		}else if (Integer.parseInt(tmp,16)==5) {
+			return "ST";
+		}else if (Integer.parseInt(tmp,16)==7) {
+			return "CBT";
+		}else if (Integer.parseInt(tmp,16)==8) {
+			return "EGP";
+		}else if (Integer.parseInt(tmp,16)==9) {
+			return "IGP";
+		}else if (Integer.parseInt(tmp,16)==10) {
+			return "BBN-RCC-MON";
+		}else if (Integer.parseInt(tmp,16)==11) {
+			return "NVP-II";
+		}else if (Integer.parseInt(tmp,16)==12) {
+			return "PUP";
+		}else if (Integer.parseInt(tmp,16)==13) {
+			return "ARGUS";
+		}else if (Integer.parseInt(tmp,16)==14) {
+			return "EMCON";
+		}else if (Integer.parseInt(tmp,16)==15) {
+			return "XNET";
+		}else if (Integer.parseInt(tmp,16)==16) {
+			return "CHAOS";
+		}else if (Integer.parseInt(tmp,16)==0) {
+			return "HOPOPT";
 		}else {throw new RuntimeException("Protocol: "+Integer.parseInt(tmp,16)+" pas au Programme");}
 	}
 	
