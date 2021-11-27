@@ -297,7 +297,8 @@ public class Input_Parser {
 		return res.toString();
 	}
 	
-	public static String protocolenameToString(String[] in) {
+	
+	public static String protocolenameToString(String[] in ) {
 		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
 		String tmp ="";
 		for (int i=9;i<10;i++) {
@@ -341,5 +342,87 @@ public class Input_Parser {
 			return "HOPOPT";
 		}else {throw new RuntimeException("Protocol: "+Integer.parseInt(tmp,16)+" pas au Programme");}
 	}
+	
+	public static String[] protocoleHData(String [] in, int start ) {
+		String[] res= new String[8];
+		int tmp=0;
+		for (int i=start;i<start+8;i++) {
+			res[tmp]=in[i];
+			tmp++;
+		}
+		return res;
+	}
+	
+	public static int protocoleHStartByIP(String [] in) {
+		if (in.length!=20) {throw new RuntimeException("Appel erroné protocoleStartByIP");}
+		String tmp = in[0];
+		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
+		return 4*tailleH+14;
+	}
+	
+	public static String protocoleHToString(String[] in) {
+		if (in.length!=8) {throw new RuntimeException("Appel erroné protocoleToString");}
+		StringBuilder res= new StringBuilder();
+		String tmp =in[0];
+		tmp=tmp+in[1];
+		{int port=Integer.parseInt(tmp,16);
+		res.append("Port Source: "+port+" (0x"+tmp+")\n");
+		tmp = in[2];
+		tmp =tmp+in[3];
+		port=Integer.parseInt(tmp,16);
+		res.append("Port Destination: "+port+" (0x"+tmp+")\n");}
+		tmp = in[4];
+		tmp =tmp+in[5];
+		res.append("Longueur: "+Integer.parseInt(tmp,16)+" (0x"+tmp+")\n");
+		tmp = in[6];
+		tmp =tmp+in[7];
+		res.append("Checksum (non verifiable): "+tmp+" (0x"+tmp+")\n");
+		return res.toString();
+	}
+	
+	public static String dNameToString(String[] in){
+		if (in.length!=8) {throw new RuntimeException("Appel erroné protocoleToString");}
+		String tmp =in[0];
+		tmp=tmp+in[1];
+		if ((Integer.parseInt(tmp,16)==67)||(Integer.parseInt(tmp,16)==68)) {
+			return "DHCP";
+		}
+		else if (Integer.parseInt(tmp,16)==53) {
+			return "DNS";
+		}else {
+			tmp =in[2];
+			tmp=tmp+in[3];
+			if ((Integer.parseInt(tmp,16)==67)||(Integer.parseInt(tmp,16)==68)) {
+				return "DHCP";
+			}
+			else if (Integer.parseInt(tmp,16)==53) {
+				return "DNS";
+		}else { return "DNS/DHCP non présent";}}
+	}
+	
+	public static int dStartByIP(String [] in) {
+		if (in.length!=20) {throw new RuntimeException("Appel erroné dStartByIP");}
+		String tmp = in[0];
+		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
+		return 4*tailleH+14+8;
+	}
+	
+	public static String dnsToString(String[] in) {
+		return "TODO DNS";
+	}
+	
+	public static String [] dnsData(String[] in, int start) {
+		return new String[1];
+	}
+	
+	public static String dhcpToString(String[] in) {
+		return "TODO DHCP";
+	}
+	
+	public static String [] dhcpData(String[] in, int start) {
+		
+		return new String[1];
+	}
+	
 	
 }

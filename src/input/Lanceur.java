@@ -15,17 +15,10 @@ public class Lanceur {
 		actuel=choix;
 	}
 	public String ethernetToString() {
-		StringBuilder res=new StringBuilder();
-		
-		String[] ethernet=Input_Parser.ethernetData(select);
-		res.append(Input_Parser.ethernetToString(ethernet));
-		return res.toString();
+		return Input_Parser.ethernetToString(Input_Parser.ethernetData(select));
 	}
 	public String ipHToString() {
-		StringBuilder res=new StringBuilder();
-		String[] ipH=Input_Parser.ipHData(select);
-		res.append(Input_Parser.ipHToString(ipH));
-		return res.toString();
+		return Input_Parser.ipHToString(Input_Parser.ipHData(select));
 	}
 	public String brutToString() {
 		String res ="";
@@ -36,21 +29,30 @@ public class Lanceur {
 	}
 	public String protocoleToString() {
 		if (Input_Parser.protocolenameToString(Input_Parser.ipHData(select)).equals("UDP")) {
-			return "TODO";
+			return Input_Parser.protocoleHToString(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select))));
 		}else {
 			return "Le Protocole: \""+Input_Parser.protocolenameToString(Input_Parser.ipHData(select))+"\" n'est pas pris en charge par ce projet!";
 		}
 	}
-	public String dToString() {
-		return "TODO";
-	}
+	
 	public String protocolNameToString() {
-		String[] ipH=Input_Parser.ipHData(select);
-		return Input_Parser.protocolenameToString(ipH);
+		return Input_Parser.protocolenameToString(Input_Parser.ipHData(select));
 	}
+	
 	public String dNameToString() {
-		return "DHCP";
+		return Input_Parser.dNameToString(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select))));
 	}
+	
+	public String dToString() {
+		if (this.dNameToString().equals("DHCP")) {
+			
+			return Input_Parser.dhcpToString(Input_Parser.dhcpData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))));
+		}else if (this.dNameToString().equals("DNS")) {
+			return Input_Parser.dnsToString(Input_Parser.dnsData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))));
+		}else {return "Un Protocole Non Pris en charge est Détecter!";}
+		
+	}
+	
 	public int nbChoix() {
 		
 		return datas.length;
