@@ -23,6 +23,8 @@ import java.awt.Window.Type;
 import java.awt.SystemColor;
 import java.awt.Color;
 import javax.swing.JScrollPane;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 /**
  * Cette classe permet de crée des interfaces plus poussée que son homologue "Question" | Version V1.0.2
@@ -41,7 +43,7 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "data/exemple7.txt");
+					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "./data/exemple7.txt");
 					//String path = "data/exemple7.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					try{
 						la=new Lanceur(path);
@@ -76,7 +78,7 @@ public class Gui {
 		frmAnalyserReseau = new JFrame();
 		frmAnalyserReseau.setResizable(false);
 		frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")");
-		frmAnalyserReseau.setBounds(100, 100, 876, 502);
+		frmAnalyserReseau.setBounds(100, 100, 870, 502);
 		frmAnalyserReseau.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -147,19 +149,24 @@ public class Gui {
 			public void actionPerformed(ActionEvent e) {
 				int a=choice.getSelectedIndex();
 				la.setectData(a);
-				IP.setText(la.ipHToString());
-				Ethernet.setText(la.ethernetToString());
-				Brut.setText(la.brutToString());
-				Protocole.setText(la.protocoleToString());
-				tabbedPane.setTitleAt(4,la.protocolNameToString());
-				if (la.protocolNameToString().equals("UDP")) {
-					tabbedPane.setTitleAt(5,la.dNameToString());
-					lesD.setText(la.dToString());
-				}else {
-					tabbedPane.setTitleAt(5,"DNS/DCHP non present");
-					lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
+				try {
+					IP.setText(la.ipHToString());
+					Ethernet.setText(la.ethernetToString());
+					Brut.setText(la.brutToString());
+					Protocole.setText(la.protocoleToString());
+					tabbedPane.setTitleAt(4,la.protocolNameToString());
+					if (la.protocolNameToString().equals("UDP")) {
+						tabbedPane.setTitleAt(5,la.dNameToString());
+						lesD.setText(la.dToString());
+					}else {
+						tabbedPane.setTitleAt(5,"DNS/DCHP non present");
+						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
+					}
+					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
+					Question.info("Trame: "+(a+1)+" Chargée avec succes!");}
+				catch (Exception e1) {
+					Question.warn("Fichier corrompu, analyse de la trame selectionnée impossible.\n Merci de selectionner une autre trame ou de vous reférer au readme pour avoir les indications de mise en forme de la trame !");
 				}
-				Question.info("Trame: "+(a+1)+" Chargée avec succes!");
 			}
 		});
 		Trame.add(bouton);
@@ -171,7 +178,14 @@ public class Gui {
 				int b=la.getActuel();
 				la.setectData(a);
 				String pathi=Question.getrep("Mettez le path exacte du fichier à écrire (à default nous écrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
-				String txt="Trame n°"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard François-Xavier et Xia Alexandre.";
+				String txt="";
+				try {
+					txt="Trame n°"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard François-Xavier et Xia Alexandre.";
+				}catch (Exception e2) {
+					Question.warn("Fichier corrompu, analyse de la trame selectionnée impossible.\n Merci de selectionner une autre trame ou de vous reférer au readme pour avoir les indications de mise en forme de la trame !");
+					la.setectData(b);
+					return;
+				}
 				try{
 					String wrep=output_parser.writer(pathi, txt);
 					Question.info("Fichier ecrit dans: \""+wrep+"\"avec succes!");
@@ -198,5 +212,12 @@ public class Gui {
 		sl_Trame.putConstraint(SpringLayout.WEST, credits, 0, SpringLayout.WEST, choice);
 		sl_Trame.putConstraint(SpringLayout.EAST, credits, 0, SpringLayout.EAST, choice);
 		Trame.add(credits);
+		
+		JLabel lblNewLabel = new JLabel("Bienvenue sur L'analyseur r\u00E9seau de Xia et Drouard");
+		sl_Trame.putConstraint(SpringLayout.NORTH, lblNewLabel, 88, SpringLayout.NORTH, Trame);
+		sl_Trame.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, printer);
+		sl_Trame.putConstraint(SpringLayout.EAST, lblNewLabel, 0, SpringLayout.EAST, bouton);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		Trame.add(lblNewLabel);
 	}
 }

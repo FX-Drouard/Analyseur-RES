@@ -292,7 +292,10 @@ public class Input_Parser {
 			ip.append(Integer.parseInt(tmp,16)+".");
 		}
 		ip.delete(ip.length()-1, ip.length());
-		res.append("Adresse IP Destination: "+ip.toString()+"\n");
+		if (ip.toString().equals("255.255.255.255")) {
+			res.append("Adresse IP Destination: "+ip.toString()+" (Broadcast)\n");
+		}else {
+			res.append("Adresse IP Destination: "+ip.toString()+"\n");}
 		//Fin analyse IP Header!
 		return res.toString();
 	}
@@ -340,7 +343,7 @@ public class Input_Parser {
 			return "CHAOS";
 		}else if (Integer.parseInt(tmp,16)==0) {
 			return "HOPOPT";
-		}else {throw new RuntimeException("Protocol: "+Integer.parseInt(tmp,16)+" pas au Programme");}
+		}else {return "Protocole Inconue";}
 	}
 	
 	public static String[] protocoleHData(String [] in, int start ) {
