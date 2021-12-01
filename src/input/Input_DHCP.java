@@ -2,7 +2,7 @@ package input;
 
 /**
  * Cette classe permet de Recupérer les option DHCP
- * @author François-Xavier Drouard  
+ * @author François-Xavier Drouard Xia Alexandre 
  */
 public class Input_DHCP {
 	/**
