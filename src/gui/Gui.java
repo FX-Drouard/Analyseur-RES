@@ -50,7 +50,7 @@ public class Gui {
 						Gui window = new Gui(path);
 						window.frmAnalyserReseau.setVisible(true);//a changer
 					}catch (FileNotFoundException e) {
-						Question.warn(e.toString());
+						Question.warn("Le fichier Specifier est introuvable, merci de relancer le programme en specifiant un fichier existant ou en prenant un fichier d'exemple contenue dans le dossier data.");
 						return;
 					}
 					
