@@ -383,6 +383,12 @@ public class Input_Parser {
 		return res.toString();
 	}
 	
+	public static int udpLong(String [] in) {
+		if (in.length!=8) {throw new RuntimeException("Appel erroné udpLong");}
+		String tmp = in[4]+in[5];
+		return Integer.parseInt(tmp,16);
+	}
+	
 	public static String dNameToString(String[] in){
 		if (in.length!=8) {throw new RuntimeException("Appel erroné protocoleToString");}
 		String tmp =in[0];
@@ -411,21 +417,138 @@ public class Input_Parser {
 	}
 	
 	public static String dnsToString(String[] in) {
+		if (in.length!=Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))) {throw new RuntimeException("Appel erroné dnsToString");}
 		return "TODO DNS";
 	}
 	
 	public static String [] dnsData(String[] in, int start) {
-		return new String[1];
-	}
-	
-	public static String dhcpToString(String[] in) {
-		return "TODO DHCP";
+		String[] res=new String[Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))];
+		int tmp=0;
+		for (int i=start;i<in.length;i++) {
+			res[tmp]=in[i];
+			tmp++;
+		}
+		return res;
 	}
 	
 	public static String [] dhcpData(String[] in, int start) {
-		
-		return new String[1];
+		String[] res=new String[Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))];
+		int tmp=0;
+		for (int i=start;i<in.length;i++) {
+			res[tmp]=in[i];
+			tmp++;
+		}
+		return res;
 	}
+	
+	public static String dhcpToString(String[] in, int taille) {
+		if (in.length!=taille) {throw new RuntimeException("Appel erroné dhcpToString");}
+		StringBuilder res= new StringBuilder();
+		StringBuilder res2= new StringBuilder();res2.append("DHCP Message Type: Unknown\n");
+		String tmp=in[0];
+		if (tmp.equals("01")) {
+			res.append("Message Type: Boot Request (0x01)\n");
+		}else if (tmp.equals("02")) {
+			res.append("Message Type: Boot Reply (0x02)\\n");
+		}else {
+			res.append("Message Type: Unknown (0x"+tmp+")\\n");
+		}
+		tmp=in[1];
+		res.append("Hardware Type: "+Input_DHCP.getHardware(Integer.parseInt(tmp,16))+"\n");
+		tmp=in[2];
+		res.append("Hardware address length: "+Integer.parseInt(tmp,16)+"\n");
+		tmp=in[3];
+		res.append("HOPS: "+Integer.parseInt(tmp,16)+"\n");
+		tmp=in[4]+in[5]+in[6]+in[7];
+		res.append("Transaction ID: 0x"+tmp+"\n");
+		tmp=in[8]+in[9];
+		res.append("Second elapsed: "+Integer.parseInt(tmp,16)+"\n");
+		tmp=in[10]+in[11];
+		if (tmp.equals("0000")) {
+			res.append("BootP flags: 0x0000 (Unicast)\n    0: Unicast\n    0000: Reserved Flags: 0x0000\n");
+		}else if (tmp.equals("8000")) {
+			res.append("BootP flags: 0x8000 (Broadcast)\n    1: Broadcast\n    .000 0000 0000 0000: Reserved Flags: 0x8000\n");
+		}else {
+			res.append("Bootp Flags: Incorrect\n");
+		}
+		res.append("Client IP address: "+Integer.parseInt(in[12],16)+"."+Integer.parseInt(in[13],16)+"."+Integer.parseInt(in[14],16)+"."+Integer.parseInt(in[15],16)+"\n");
+		res.append("Your (Client) IP address: "+Integer.parseInt(in[16],16)+"."+Integer.parseInt(in[17],16)+"."+Integer.parseInt(in[18],16)+"."+Integer.parseInt(in[19],16)+"\n");
+		res.append("Next server IP address: "+Integer.parseInt(in[20],16)+"."+Integer.parseInt(in[21],16)+"."+Integer.parseInt(in[22],16)+"."+Integer.parseInt(in[23],16)+"\n");
+		res.append("Relay agent IP address (Gateway): "+Integer.parseInt(in[24],16)+"."+Integer.parseInt(in[25],16)+"."+Integer.parseInt(in[26],16)+"."+Integer.parseInt(in[27],16)+"\n");
+		res.append("Client Mac Adress: "+in[28]+":"+in[29]+":"+in[30]+":"+in[31]+":"+in[32]+":"+in[33]+"\n");
+		String ttmp="";
+		res.append("Padding: 00000000000000000000\n");
+		for (int i=44;i<108;i++) {
+			ttmp=ttmp+Input_DHCP.hexToAscii(in[i]);
+		}
+		if (ttmp.equals(null)) {
+			res.append("Server host name: not given"+"\n");
+		}else {
+			res.append("Server Host Name: "+ttmp+"\n");
+		}
+		ttmp="";
+		for (int i=109;i<236;i++) {
+			ttmp=ttmp+Input_DHCP.hexToAscii(in[i]);
+		}
+		if (ttmp.equals(null)) {
+			res.append("Boot file name: not given"+"\n");
+		}else {
+			System.out.println("."+ttmp+".");
+			res.append("Boot File Name: "+ttmp+"\n");
+		}
+		tmp=in[236]+in[237]+in[238]+in[239];
+		if (!tmp.equals("63825363")) {
+			res.append("Magic cookie invalide (0x"+tmp+")\n");
+			return res.toString();
+		}
+		res.append("Magic cookie: DHCP"+"\n");
+		//return res.toString();
+		try {
+			for (int i=240;true;i++) {
+				tmp=in[i];
+				System.out.println(tmp);
+				res.append("DHCP Option: "+Input_DHCP.getType(Integer.parseInt(tmp,16)));
+				if (tmp.equals("ff")||tmp.equals("FF")) {
+					return res2.toString()+res.toString();//si le temps nous le permet on mes le padding sinon fuck
+				
+				}
+				int len=Integer.parseInt(in[i+1],16);
+				res.append("Longueur: "+len);
+				if (Integer.parseInt(tmp,16)==53) {
+					if (in[i+2].equals("01")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: DISCOVER");
+						res.append("DHCP Message Type: DISCOVER (1)");
+					}else if (in[i+2].equals("02")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: OFFER");
+						res.append("DHCP Message Type: OFFER (2)");
+					}else if (in[i+2].equals("03")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: REQUEST");
+						res.append("DHCP Message Type: REQUEST (3)");
+					}else if (in[i+2].equals("04")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: DECLINE");
+						res.append("DHCP Message Type: DECLINE (4)");
+					}else if (in[i+2].equals("05")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: ACK");
+						res.append("DHCP Message Type: ACK (5)");
+					}else if (in[i+2].equals("06")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: NAK");
+						res.append("DHCP Message Type: NAK (6)");
+					}else if (in[i+2].equals("07")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: RELEASE");
+						res.append("DHCP Message Type: RELEASE (7)");
+					}else if (in[i+2].equals("08")) {
+						res2=new StringBuilder();res2.append("DHCP Message Type: INFORM");
+						res.append("DHCP Message Type: INFORM (8)");
+					}}
+				i+=len-1;
+			}
+		}catch (Exception e){
+			return "Paquet DHCP malformé!\n"+res2.toString()+res.toString();
+		}
+		
+	}
+	
+	
 	
 	
 }

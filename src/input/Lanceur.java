@@ -46,7 +46,7 @@ public class Lanceur {
 	public String dToString() {
 		if (this.dNameToString().equals("DHCP")) {
 			
-			return Input_Parser.dhcpToString(Input_Parser.dhcpData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))));
+			return Input_Parser.dhcpToString(Input_Parser.dhcpData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))),Input_Parser.udpLong(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select)))));
 		}else if (this.dNameToString().equals("DNS")) {
 			return Input_Parser.dnsToString(Input_Parser.dnsData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))));
 		}else {return "Un Protocole Non Pris en charge est Détecter!";}

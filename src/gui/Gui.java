@@ -34,6 +34,7 @@ public class Gui {
 
 	private JFrame frmAnalyserReseau;
 	private static Lanceur la;
+	private static int val=0;
 
 	/**
 	 * Lance La fenetre et Appel Lanceur de Input et demande avant le path du fichier a analysé.
@@ -51,6 +52,11 @@ public class Gui {
 						window.frmAnalyserReseau.setVisible(true);//a changer
 					}catch (FileNotFoundException e) {
 						Question.warn("Le fichier Specifier est introuvable, merci de relancer le programme en specifiant un fichier existant ou en prenant un fichier d'exemple contenue dans le dossier data.");
+						val =1;
+					}
+					if (val==1) {
+						val=0;
+						main(args);
 						return;
 					}
 					
@@ -59,7 +65,9 @@ public class Gui {
 					Question.warn(e.toString());
 				}
 			}
+			
 		});
+		
 	}
 
 	/**
