@@ -27,8 +27,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 
 /**
- * Cette classe permet de crée des interfaces plus poussée que son homologue "Question" | Version V1.0.2
- * @author François-Xavier Drouard  
+ * Cette classe permet de cree des interfaces plus poussee que son homologue "Question" | Version V1.0.2
+ * @author Franeois-Xavier Drouard  
  */
 public class Gui {
 
@@ -37,14 +37,14 @@ public class Gui {
 	private static int val=0;
 
 	/**
-	 * Lance La fenetre et Appel Lanceur de Input et demande avant le path du fichier a analysé.
+	 * Lance La fenetre et Appel Lanceur de Input et demande avant le path du fichier a analyse.
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnée alors un txt de démo sera chargé)", "./data/exemple7.txt");
+					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple7.txt");
 					//String path = "data/exemple7.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					try{
 						la=new Lanceur(path);
@@ -170,10 +170,10 @@ public class Gui {
 						tabbedPane.setTitleAt(5,"DNS/DCHP non present");
 						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
 					}
-					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
-					Question.info("Trame: "+(a+1)+" Chargée avec succes!");}
+					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame Num:"+(la.getActuel()+1));
+					Question.info("Trame: "+(a+1)+" Chargee avec succes!");}
 				catch (Exception e1) {
-					Question.warn("Fichier corrompu, analyse de la trame selectionnée impossible.\n Merci de selectionner une autre trame ou de vous reférer au readme pour avoir les indications de mise en forme de la trame !");
+					Question.warn("Fichier corrompu, analyse de la trame selectionnee impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
 				}
 			}
 		});
@@ -185,12 +185,12 @@ public class Gui {
 				int a=choice.getSelectedIndex();
 				int b=la.getActuel();
 				la.setectData(a);
-				String pathi=Question.getrep("Mettez le path exacte du fichier à écrire (à default nous écrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
+				String pathi=Question.getrep("Mettez le path exacte du fichier a ecrire (par defaut nous ecrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
 				String txt="";
 				try {
-					txt="Trame n°"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard François-Xavier et Xia Alexandre.";
+					txt="Trame ne"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard Franï¿½ois-Xavier et Xia Alexandre.";
 				}catch (Exception e2) {
-					Question.warn("Fichier corrompu, analyse de la trame selectionnée impossible.\n Merci de selectionner une autre trame ou de vous reférer au readme pour avoir les indications de mise en forme de la trame !");
+					Question.warn("Fichier corrompu, analyse de la trame selectionnee impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
 					la.setectData(b);
 					return;
 				}
@@ -213,7 +213,7 @@ public class Gui {
 		Button credits = new Button("Credits");
 		credits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Question.info("Ce programme à été codé par:\n Xia Alexandre 28604113 \n et\n Drouard François-Xavier 3800028\n Pour Sorbonne Science UE LU3IN033 2021-2022");
+				Question.info("Ce programme e ete code par:\n Xia Alexandre 28604113 \n et\n Drouard FranÃ§ois-Xavier 3800028\n Pour Sorbonne Science UE LU3IN033 2021-2022");
 			}
 		});
 		sl_Trame.putConstraint(SpringLayout.NORTH, credits, 45, SpringLayout.SOUTH, choice);

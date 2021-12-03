@@ -1,8 +1,8 @@
 package input;
 
 /**
- * Cette classe permet de Recupérer les option DHCP
- * @author François-Xavier Drouard Xia Alexandre 
+ * Cette classe permet de Recupï¿½rer les option DHCP
+ * @author Franï¿½ois-Xavier Drouard Xia Alexandre 
  */
 public class Input_DHCP {
 	/**
@@ -13,7 +13,7 @@ public class Input_DHCP {
 	private static final String[] hardwaret= {"","Ethernet","Experimental Ethernet","Amateur Radio AX.25","Proteon ProNET Token Ring","Chaos","IEEE 802","ARCNET","Hyperchannel","Lanstar","Autonet Short Address","LocalTalk","LocalNet (IBM PCNet or SYTEK LocalNET)","Ultra link","SMDS","Frame Relay","ATM, Asynchronous Transmission Mode","HDLC","Fibre Channel","ATM, Asynchronous Transmission Mode","Serial Line","ATM, Asynchronous Transmission Mode","MIL-STD-188-220","Metricom","IEEE 1394.1995","MAPOS","Twinaxial","EUI-64","HIPARP","IP and ARP over ISO 7816-3","ARPSec","IPsec tunnel","Infiniband","CAI, TIA-102 Project 25 Common Air Interface","Wiegand Interface","Pure IP"};
 	
 	/**
-	 * Permet de get l'option par rapport a son numéro
+	 * Permet de get l'option par rapport a son numï¿½ro
 	 * @param val: Le numero de l'option
 	 * @return L'option en String
 	 */
@@ -22,7 +22,7 @@ public class Input_DHCP {
 	}
 	
 	/**
-	 * Permet de get le type option par rapport a son numéro
+	 * Permet de get le type option par rapport a son numï¿½ro
 	 * @param val: Le numero de l'option
 	 * @return Le type de l'option en String
 	 */
@@ -43,6 +43,10 @@ public class Input_DHCP {
 	    }
 	    
 	    return output.toString();
+	}
+	
+	public static String[] getTab(){
+		return tab;
 	}
 	
 }

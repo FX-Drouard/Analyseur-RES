@@ -465,9 +465,9 @@ public class Input_Parser {
 		res.append("Second elapsed: "+Integer.parseInt(tmp,16)+"\n");
 		tmp=in[10]+in[11];
 		if (tmp.equals("0000")) {
-			res.append("BootP flags: 0x0000 (Unicast)\n    0: Unicast\n    0000: Reserved Flags: 0x0000\n");
+			res.append("BootP flags: 0x0000 (Unicast)\n    0... .... .... .... : Unicast\n    .000 0000 0000 0000: Reserved Flags: 0x0000\n");
 		}else if (tmp.equals("8000")) {
-			res.append("BootP flags: 0x8000 (Broadcast)\n    1: Broadcast\n    .000 0000 0000 0000: Reserved Flags: 0x8000\n");
+			res.append("BootP flags: 0x8000 (Broadcast)\n    1... .... .... .... : Broadcast\n    .000 0000 0000 0000: Reserved Flags: 0x8000\n");
 		}else {
 			res.append("Bootp Flags: Incorrect\n");
 		}
@@ -478,22 +478,31 @@ public class Input_Parser {
 		res.append("Client Mac Adress: "+in[28]+":"+in[29]+":"+in[30]+":"+in[31]+":"+in[32]+":"+in[33]+"\n");
 		String ttmp="";
 		res.append("Padding: 00000000000000000000\n");
+		
+		boolean isnZ=true;
 		for (int i=44;i<108;i++) {
 			ttmp=ttmp+Input_DHCP.hexToAscii(in[i]);
+			if(!(in[i].equals("00"))) {
+				isnZ=false;
+			}
 		}
-		if (ttmp.equals(null)) {
+		if (isnZ) {
 			res.append("Server host name: not given"+"\n");
 		}else {
 			res.append("Server Host Name: "+ttmp+"\n");
 		}
+		
+		isnZ=true;
 		ttmp="";
 		for (int i=109;i<236;i++) {
+			if(!(in[i].equals("00"))) {
+				isnZ=false;
+			}
 			ttmp=ttmp+Input_DHCP.hexToAscii(in[i]);
 		}
-		if (ttmp.equals(null)) {
+		if (isnZ) {
 			res.append("Boot file name: not given"+"\n");
 		}else {
-			System.out.println("."+ttmp+".");
 			res.append("Boot File Name: "+ttmp+"\n");
 		}
 		tmp=in[236]+in[237]+in[238]+in[239];
@@ -503,48 +512,75 @@ public class Input_Parser {
 		}
 		res.append("Magic cookie: DHCP"+"\n");
 		//return res.toString();
+		int lastind=240;
 		try {
-			for (int i=240;true;i++) {
+			boolean fin=true;
+			int i=240;
+			while(fin) {
 				tmp=in[i];
-				System.out.println(tmp);
-				res.append("DHCP Option: "+Input_DHCP.getType(Integer.parseInt(tmp,16)));
+				int index=Integer.parseInt(tmp,16);
+				if(index <=Input_DHCP.getTab().length && index >=0) {
+					res.append("DHCP Option: "+Input_DHCP.getOption(Integer.parseInt(tmp,16))+"("+index+")");
+				}
+				else {
+					res.append("DHCP Option: Unknown "+index+"\n");
+				}
+				
+				int len=Integer.parseInt(in[i+1],16);
+				//option end 255
 				if (tmp.equals("ff")||tmp.equals("FF")) {
-					return res2.toString()+res.toString();//si le temps nous le permet on mes le padding sinon fuck
+					lastind=i+len+1;
+					fin=false;//padding todo
 				
 				}
-				int len=Integer.parseInt(in[i+1],16);
-				res.append("Longueur: "+len);
+				
 				if (Integer.parseInt(tmp,16)==53) {
-					if (in[i+2].equals("01")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: DISCOVER");
-						res.append("DHCP Message Type: DISCOVER (1)");
-					}else if (in[i+2].equals("02")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: OFFER");
-						res.append("DHCP Message Type: OFFER (2)");
-					}else if (in[i+2].equals("03")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: REQUEST");
-						res.append("DHCP Message Type: REQUEST (3)");
-					}else if (in[i+2].equals("04")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: DECLINE");
-						res.append("DHCP Message Type: DECLINE (4)");
-					}else if (in[i+2].equals("05")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: ACK");
-						res.append("DHCP Message Type: ACK (5)");
-					}else if (in[i+2].equals("06")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: NAK");
-						res.append("DHCP Message Type: NAK (6)");
-					}else if (in[i+2].equals("07")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: RELEASE");
-						res.append("DHCP Message Type: RELEASE (7)");
-					}else if (in[i+2].equals("08")) {
-						res2=new StringBuilder();res2.append("DHCP Message Type: INFORM");
-						res.append("DHCP Message Type: INFORM (8)");
-					}}
-				i+=len-1;
+					if (in[i+1+len].equals("01")) {
+						res.append(" : DISCOVER\n");
+					}else if (in[i+1+len].equals("02")) {
+						res.append(" : OFFER\n");
+					}else if (in[i+1+len].equals("03")) {
+						res.append(" : REQUEST\n");
+					}else if (in[i+1+len].equals("04")) {
+
+						res.append(" : DECLINE\n");
+					}else if (in[i+1+len].equals("05")) {
+						res.append(" : ACK\n");
+					}else if (in[i+1+len].equals("06")) {
+
+						res.append(" : NAK\n");
+					}else if (in[i+1+len].equals("07")) {
+						res.append(" : RELEASE\n");
+					}else if (in[i+1+len].equals("08")) {
+
+						res.append(" : INFORM\n");
+					}else {
+						res.append(" : UNKNOWN\n");
+					}
+				}else {
+					res.append("\n");
+				}
+				res.append("Longueur: "+len+"\n");
+				
+				//Attention il faut incrémenter de 2 pour commencer au bon endroit
+				i+=len+2;
 			}
 		}catch (Exception e){
-			return "Paquet DHCP malformé!\n"+res2.toString()+res.toString();
+			return res.toString()+"Paquet DHCP malformé!\n";
 		}
+		//Padding
+		if(lastind>240) {
+			StringBuilder pad=new StringBuilder();
+			for (int i =lastind;i<taille;i++) {
+				if(in[i]==null) {
+					break;
+				}
+				pad.append(in[i]);
+			}
+			res.append("Padding : "+pad.toString());
+		}
+		
+		return res.toString();
 		
 	}
 	
