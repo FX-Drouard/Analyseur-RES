@@ -170,7 +170,7 @@ public class Gui {
 						tabbedPane.setTitleAt(5,"DNS/DCHP non present");
 						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
 					}
-					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame Num:"+(la.getActuel()+1));
+					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
 					Question.info("Trame: "+(a+1)+" Chargee avec succes!");}
 				catch (Exception e1) {
 					Question.warn("Fichier corrompu, analyse de la trame selectionnee impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
