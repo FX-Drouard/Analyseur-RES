@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.*; 
 import java.awt.*;
 /**
- * Cette classe permet de crée des interfaces simpliste | Version Personel V0.7.1
+ * Cette classe permet de crée des interfaces simpliste | Version Personel V0.7.2
  * @author François-Xavier Drouard  
  */
 public class Question {
