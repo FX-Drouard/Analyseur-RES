@@ -511,6 +511,7 @@ public class Input_Parser {
 			return res.toString();
 		}
 		res.append("Magic cookie: DHCP"+"\n");
+		res.append("\nDebut des Options:\n\n");
 		//return res.toString();
 		int lastind=240;
 		try {
@@ -560,7 +561,7 @@ public class Input_Parser {
 				}else {
 					res.append("\n");
 				}
-				res.append("Longueur: "+len+"\n");
+				res.append("    Longueur: "+len+"\n");
 				
 				//Attention il faut incrémenter de 2 pour commencer au bon endroit
 				i+=len+2;
@@ -577,7 +578,8 @@ public class Input_Parser {
 				}
 				pad.append(in[i]);
 			}
-			res.append("Padding : "+pad.toString());
+			res.append(""
+					+ "\nPadding : "+pad.toString());
 		}
 		
 		return res.toString();
