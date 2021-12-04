@@ -575,7 +575,7 @@ public class Input_Parser {
 				tmp=in[i];
 				int index=Integer.parseInt(tmp,16);
 				if(index <=Input_DHCP.getTab().length && index >=0) {
-					res.append("DHCP Option: "+Input_DHCP.getOption(Integer.parseInt(tmp,16))+"("+index+")");
+					res.append("DHCP Option: "+Input_DHCP.getOption(Integer.parseInt(tmp,16))+" ("+index+")");
 				}
 				else {
 					res.append("DHCP Option: Unknown "+index+"\n");
@@ -592,52 +592,83 @@ public class Input_Parser {
 				if (Integer.parseInt(tmp,16)==53) {
 					if (in[i+1+len].equals("01")) {
 						res.append(" : DISCOVER\n");
+						res.append("    Longueur: "+len+"\n");
 					}else if (in[i+1+len].equals("02")) {
 						res.append(" : OFFER\n");
+						res.append("    Longueur: "+len+"\n");
 					}else if (in[i+1+len].equals("03")) {
 						res.append(" : REQUEST\n");
+						res.append("    Longueur: "+len+"\n");
 					}else if (in[i+1+len].equals("04")) {
 
 						res.append(" : DECLINE\n");
+						res.append("    Longueur: "+len+"\n");
 					}else if (in[i+1+len].equals("05")) {
 						res.append(" : ACK\n");
+						res.append("    Longueur: "+len+"\n");
 					}else if (in[i+1+len].equals("06")) {
 
 						res.append(" : NAK\n");
+						res.append("    Longueur: "+len+"\n");
 					}else if (in[i+1+len].equals("07")) {
 						res.append(" : RELEASE\n");
+						res.append("    Longueur: "+len+"\n");
 					}else if (in[i+1+len].equals("08")) {
 
 						res.append(" : INFORM\n");
+						res.append("    Longueur: "+len+"\n");
 					}else {
 						res.append(" : UNKNOWN\n");
+						res.append("    Longueur: "+len+"\n");
 					}
 				}else if (Integer.parseInt(tmp,16)==51){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					String val=in[i+2]+in[i+3]+in[i+4]+in[i+5];
+					int sec= Integer.parseInt(val, 16);
+					res.append("    IP Address Lease Time: ("+sec+"s) "+Input_DHCP.secToDays(sec)+" day(s)\n");
 				}else if (Integer.parseInt(tmp,16)==55){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					//alex c ton listing la
 				}else if (Integer.parseInt(tmp,16)==1){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					res.append("    Subnet Mask: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
 				}else if (Integer.parseInt(tmp,16)==54){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					res.append("    DHCP Server Identifier: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
 				}else if (Integer.parseInt(tmp,16)==15){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					StringBuilder txt=new StringBuilder();
+					for (int j=i+2;j<i+len+1;j++) {
+						txt.append(in[j]);
+					}
+					res.append("    Domain Name: "+Input_DHCP.hexToAscii(txt.toString())+"\n");
 				}else if (Integer.parseInt(tmp,16)==6){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					int nb=len/4;
+					res.append("    Nombre de serveur de Noms: "+nb+"\n");
+					for (int j=0;j<nb;j++) {
+						res.append("    Serveur de nom: "+Integer.parseInt(in[i+2+(4*j)],16)+"."+Integer.parseInt(in[i+3+(4*j)],16)+"."+Integer.parseInt(in[i+4+(4*j)],16)+"."+Integer.parseInt(in[i+4+(4*j)],16)+"\n");
+					}
 				}else if (Integer.parseInt(tmp,16)==3){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					res.append("    Router: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
 				}else if (Integer.parseInt(tmp,16)==50){
-					res.append("\n");
-				}else if (Integer.parseInt(tmp,16)==12){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					res.append("    Requested IP Adress: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
+				}else if (Integer.parseInt(tmp,16)==12){ //Help Alex ça marche po
+					res.append("\n    Longueur: "+len+"\n");
+					StringBuilder txt =new StringBuilder();
+					for (int j=i+2;j<i+len+1;j++) {
+						txt.append(in[i]);
+					}
+					res.append("Host Name: "+Input_DHCP.hexToAscii(txt.toString())+"\n");
 				}else if (Integer.parseInt(tmp,16)==42){
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
+					res.append("    NTP Server: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
 				}else {
-					res.append("\n");
+					res.append("\n    Longueur: "+len+"\n");
 				}
 				
-				
-				res.append("    Longueur: "+len+"\n");
 				
 				//Attention il faut incrémenter de 2 pour commencer au bon endroit
 				i+=len+2;
