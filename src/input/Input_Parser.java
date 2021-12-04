@@ -83,7 +83,7 @@ public class Input_Parser {
 			String[] tsplit= tmp.split(" ");
 			StringBuilder news= new StringBuilder();
 			for(int j=0; j<tsplit.length-1;j++) {
-				if(tsplit[j]!="" && tsplit[j].length()==2) {
+				if(tsplit[j]!="" && tsplit[j].length()==2 && isHex(tsplit[j])) {
 					news.append(tsplit[j]+" ");
 				}
 			}
@@ -106,6 +106,14 @@ public class Input_Parser {
 		
 	}
 	
+	public static boolean isHex(String s) {
+		try {
+			Long.parseLong(s,16);
+			return true;
+		}catch (NumberFormatException e) {
+			return false;
+		}
+	}
 	public static String[][] filterCall(String in){
 		String[]tmp=splitOffSet(in);
 		String[]restmp;
