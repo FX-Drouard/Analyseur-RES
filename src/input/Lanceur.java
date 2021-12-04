@@ -10,9 +10,14 @@ public class Lanceur {
 		this.datas=Input_Parser.parse(path);
 		this.setectData(0);
 	}
-	public void setectData(int choix) {
-		select=datas[choix];
-		actuel=choix;
+	public void setectData(int choix) throws RuntimeException {
+		if(choix< datas.length && choix>=0) {
+			select=datas[choix];
+			actuel=choix;
+		}else {
+			//throw new RuntimeException("Aucune trame correspond à cette valeur");
+		}
+		
 	}
 	public String ethernetToString() {
 		return Input_Parser.ethernetToString(Input_Parser.ethernetData(select));

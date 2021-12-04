@@ -4,18 +4,67 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
 public class Input_Parser {
 	private Input_Parser(String fileName) {}
-	public static String[][] parse(String fileName) throws IOException,FileNotFoundException {//Lis le fichier
+	public static String[][] parse(String fileName) throws IOException,FileNotFoundException, RuntimeException {//Lis le fichier
 		BufferedReader br = null;
 		StringBuilder res=new StringBuilder();
+		StringBuilder sb= new StringBuilder();
+		List<String> ls= new ArrayList<>();
 		try{
 			br = new BufferedReader(new FileReader(fileName));
 			String line;
+			int cptOc=0;
+			int numL=0;
+			
 			while((line=br.readLine())!=null) {
+				numL+=1;
+				
+				String[] tmps=line.split(" ");
+				
+				//Debut de trame
+				if(tmps[0].equals("0000")) {
+					cptOc=0;
+					
+					//Split manuel (dans le cas ou il n'y a pas de donnees a la fin
+					if(numL>1) {
+						ls.add(sb.toString());
+						sb=new StringBuilder();
+					}
+					
+				//Nouvelle ligne, on vérifie que cptOc est bien égal au offset sinon la ligne d'avant est fausse
+				}else if(tmps[0].length()==4) {
+					if(isHex(tmps[0])) {
+						if(Integer.parseInt(tmps[0],16)==cptOc) {
+						}else {
+							System.out.println("ICI");
+							throw new RuntimeException("Offset Invalide ou Ligne incomplète à la ligne : "+(numL-1));
+						}
+					}
+				}else {
+					continue;
+				}
+				//Sinon on ignore (offset invalide)
+				
+				//On compte les octets de la trame
+				for (int i =1;i<tmps.length;i++) {
+					if(tmps[i].length()==2 && isHex(tmps[i])) {
+						cptOc+=1;
+					}
+					
+					//Partie du split manuel
+					sb.append(tmps[i].toLowerCase()+" ");					
+				}
+				
+				//Partie split manuel aussi
+				sb.deleteCharAt(sb.length()-1);
+				//Il faut tester la validité de la ligne (non fait)
+				
 				//String[] buffer=line.split(" ");
 				res.append(line);
 			}
@@ -33,10 +82,21 @@ public class Input_Parser {
 				br.close();
 			}
 		}
-		String[][] allres=filterCall(res.toString().toLowerCase());
+		
+		//On n'oublie pas d'ajouter la derniere trame s'il y en a une pour le split manuel
+		if(sb.length()>0 ) {
+			ls.add(sb.toString());
+		}
+		String[] use= new String[ls.size()];
+		for(int i=0;i<use.length;i++) {
+			use[i]=ls.get(i);
+		}
+		String[][] allres=filterCall(use);
 		return allres;
 	}
 	
+	/*
+	//Cette méthode ne marche pas si une trame est suivi de 2 00 en fin de ligne et commence par 00 sur la ligne suivante
 	public static String[] splitOffSet(String in) {
 		String[] tmp;
 		String[] res;
@@ -49,7 +109,7 @@ public class Input_Parser {
 			res[i-1]=tmp[i];
 		}
 		return res;
-	}
+	}*/
 	
 	public static String[] backToSpace(String[] in) {
 		String[] res=in;
@@ -114,8 +174,9 @@ public class Input_Parser {
 			return false;
 		}
 	}
-	public static String[][] filterCall(String in){
-		String[]tmp=splitOffSet(in);
+	public static String[][] filterCall(String[] in){
+		//String[]tmp=splitOffSet(in);
+		String[]tmp=in;
 		String[]restmp;
 		String[][]res;
 		restmp=backToSpace(tmp);
@@ -297,7 +358,6 @@ public class Input_Parser {
 		//Destination
 		for (int i=16;i<20;i++) {
 			tmp=in[i];
-			System.out.println(tmp);
 			ip.append(Integer.parseInt(tmp,16)+".");
 		}
 		ip.delete(ip.length()-1, ip.length());

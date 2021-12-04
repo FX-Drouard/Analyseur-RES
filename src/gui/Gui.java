@@ -62,6 +62,7 @@ public class Gui {
 					
 				} catch (Exception e) {
 					e.printStackTrace();
+					e.getMessage();
 					Question.warn(e.toString());
 				}
 			}
@@ -174,7 +175,7 @@ public class Gui {
 					Question.info("Trame: "+(a+1)+" Chargee avec succes!");}
 				catch (Exception e1) {
 					Question.warn("La trame selectionnee a un taux d'invalidit� superieur au maximum tol�r�, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
-					System.out.println(e1.toString());
+					System.out.println(e1.getMessage());
 				}
 			}
 		});
@@ -192,7 +193,7 @@ public class Gui {
 					txt="Trame ne"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard Fran�ois-Xavier et Xia Alexandre.";
 				}catch (Exception e2) {
 					Question.warn("La trame selectionn�e a un taux d'invalidit� superieur au maximum tol�r�, analyse impossible.\\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
-					System.out.println(e2.toString());
+					System.out.println(e2.getMessage());
 					la.setectData(b);
 					return;
 				}
