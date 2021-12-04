@@ -1,5 +1,7 @@
 package input;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Cette classe permet de Recup�rer les option DHCP
  * @author Fran�ois-Xavier Drouard Xia Alexandre 
@@ -47,6 +49,10 @@ public class Input_DHCP {
 	
 	public static String[] getTab(){
 		return tab;
+	}
+	
+	public static int secToDays(int sec) {
+		return (int)TimeUnit.SECONDS.toDays(sec);
 	}
 	
 }

@@ -289,6 +289,7 @@ public class Input_Parser {
 		//Destination
 		for (int i=16;i<20;i++) {
 			tmp=in[i];
+			System.out.println(tmp);
 			ip.append(Integer.parseInt(tmp,16)+".");
 		}
 		ip.delete(ip.length()-1, ip.length());
@@ -416,21 +417,6 @@ public class Input_Parser {
 		return 4*tailleH+14+8;
 	}
 	
-	public static String dnsToString(String[] in) {
-		if (in.length!=Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))) {throw new RuntimeException("Appel erroné dnsToString");}
-		return "TODO DNS";
-	}
-	
-	public static String [] dnsData(String[] in, int start) {
-		String[] res=new String[Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))];
-		int tmp=0;
-		for (int i=start;i<in.length;i++) {
-			res[tmp]=in[i];
-			tmp++;
-		}
-		return res;
-	}
-	
 	public static String [] dhcpData(String[] in, int start) {
 		String[] res=new String[Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))];
 		int tmp=0;
@@ -444,7 +430,7 @@ public class Input_Parser {
 	public static String dhcpToString(String[] in, int taille) {
 		if (in.length!=taille) {throw new RuntimeException("Appel erroné dhcpToString");}
 		StringBuilder res= new StringBuilder();
-		StringBuilder res2= new StringBuilder();res2.append("DHCP Message Type: Unknown\n");
+		//StringBuilder res2= new StringBuilder();res2.append("DHCP Message Type: Unknown\n");
 		String tmp=in[0];
 		if (tmp.equals("01")) {
 			res.append("Message Type: Boot Request (0x01)\n");
@@ -531,7 +517,7 @@ public class Input_Parser {
 				//option end 255
 				if (tmp.equals("ff")||tmp.equals("FF")) {
 					lastind=i+len+1;
-					fin=false;//padding todo
+					fin=false;
 				
 				}
 				
@@ -558,9 +544,31 @@ public class Input_Parser {
 					}else {
 						res.append(" : UNKNOWN\n");
 					}
+				}else if (Integer.parseInt(tmp,16)==51){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==55){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==1){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==54){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==15){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==6){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==3){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==50){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==12){
+					res.append("\n");
+				}else if (Integer.parseInt(tmp,16)==42){
+					res.append("\n");
 				}else {
 					res.append("\n");
 				}
+				
+				
 				res.append("    Longueur: "+len+"\n");
 				
 				//Attention il faut incrémenter de 2 pour commencer au bon endroit
@@ -586,7 +594,182 @@ public class Input_Parser {
 		
 	}
 	
+	public static String dnsToString(String[] in, int taille) {
+		if (in.length!=taille) {throw new RuntimeException("Appel erroné dhcpToString");}
+		StringBuilder res=new StringBuilder();
+		res.append("Transaction id: 0x"+in[0]+in[1]+"\n");
+		//flags
+		String tmp=in[2]+in[3];
+		res.append("Flags: 0x"+tmp+" ");
+		{StringBuilder res2= new StringBuilder();
+		boolean resp=false;
+		String bin=Input_Parser.hexToBin(tmp);
+		if(bin.charAt(0)==0) {
+			res2.append("    "+bin.charAt(0)+"... .... .... .... = Response: message is a query\n");
+		}else {
+			res2.append("    "+bin.charAt(0)+"... .... .... .... = Response: message a response\n");
+			resp=true;
+		}
+		{String op =bin.substring(1, 5); //debut op
+		if (op.equals("0000")) {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode: Standard Query ("+Integer.parseInt(op, 2)+")\n");
+			res.append("Standard Query ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}else if (op.equals("0001")) {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode:  IQuery ("+Integer.parseInt(op, 2)+")\n");
+			res.append("IQuery ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}else if (op.equals("0010")) {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode: Status ("+Integer.parseInt(op, 2)+")\n");
+			res.append("Status ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}else if (op.equals("0011")) {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode: Unassigned ("+Integer.parseInt(op, 2)+")\n");
+			res.append("Unassigned ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}else if (op.equals("0100")) {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode: Notify ("+Integer.parseInt(op, 2)+")\n");
+			res.append("Notify ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}else if (op.equals("0101")) {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode: Update ("+Integer.parseInt(op, 2)+")\n");
+			res.append("Update ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}else if (op.equals("0110")) {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode: DNS Stateful Operations ("+Integer.parseInt(op, 2)+")\n");
+			res.append("DNS Stateful Operations ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}else {
+			res2.append("    ."+op.substring(0,3)+" "+op.charAt(3)+"... .... .... =OPCode: Unknown ("+Integer.parseInt(op, 2)+")\n");
+			res.append("Unknown ("+Integer.parseInt(op, 2)+") "+"Is Response: "+resp);
+		}
+		}//fin op
+		if (resp) {
+			String a = ""+bin.charAt(5);
+			if (a.equals("0")) {
+				res2.append("    .... ."+a+".. .... .... = Authoritative: Server is not an authority for domain\n");
+			}else {
+				res2.append("    .... ."+a+".. .... .... = Authoritative: Server is an authority for domain\n");
+			}
+		}
+		if ((""+bin.charAt(6)).equals("0")) {
+			res2.append("    .... .."+bin.charAt(6)+". .... .... = Truncated: Message is not truncated\n");
+		}else {
+			res2.append("    .... .."+bin.charAt(6)+". .... .... = Truncated: Message is truncated\n");
+		}
+		if ((""+bin.charAt(7)).equals("1")) {
+			res2.append("    .... ..."+bin.charAt(7)+" .... .... = Recursion Desired: Do query recursively\n");
+		}else {
+			res2.append("    .... ..."+bin.charAt(7)+" .... .... = Recursion Desired: Don't do query recursively\n");
+		}
+		if (resp) {
+			if ((""+bin.charAt(8)).equals("0")) {
+				res2.append("    .... .... "+bin.charAt(8)+"... .... = Recursion Available: Server Can't do recursive queries\n");
+			}else {
+				res2.append("    .... .... "+bin.charAt(8)+"... .... = Recursion Available: Server can do recursive queries\n");
+			}
+		}
+		if ((""+bin.charAt(9)).equals("1")) {
+			res2.append("    .... .... ."+bin.charAt(9)+".. .... = Z: reserved -Incorrect!\n");
+		}else {
+			res2.append("    .... .... ."+bin.charAt(9)+".. .... = Z: reserved (0)\n");
+		}
+		if (resp) {
+			if ((""+bin.charAt(10)).equals("0")) {
+				res2.append("    .... .... .."+bin.charAt(10)+". .... = Answer authenticated: Answer/Authority portion was not authenticated by the server\n");
+			}else {
+				res2.append("    .... .... .."+bin.charAt(10)+". .... = Answer authenticated: Answer/Authority portion was authenticated by the server\n");
+			}
+		}
+		if ((""+bin.charAt(11)).equals("0")) {
+			res2.append("    .... .... ..."+bin.charAt(11)+" .... = Non-authenticated data: Unacceptable!\n");
+		}else {
+			res2.append("    .... .... ..."+bin.charAt(11)+" .... = Non-authenticated data: Acceptable\n");
+		}
+		if (resp) {
+			String a=bin.substring(12);
+			if (a.equals("0000")) {
+				res2.append("    .... .... .... "+a+" = Reply code: No error ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", no error\n");
+			}else if (a.equals("0001")) {
+				res2.append("    .... .... .... "+a+" = Reply code: Error ("+Integer.parseInt(a, 2)+")\n");
+				res.append(" Error\n");
+			}else if (a.equals("0010")) {
+				res2.append("    .... .... .... "+a+" = Reply code: Server failed ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", Server failed\n");
+			}else if (a.equals("0011")) {
+				res2.append("    .... .... .... "+a+" = Reply code: No such name ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", No such name\n");
+			}else if (a.equals("0100")) {
+				res2.append("    .... .... .... "+a+" = Reply code: Not Implemented ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", Not Implemented\n");
+			}else if (a.equals("0101")) {
+				res2.append("    .... .... .... "+a+" = Reply code: Refused ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", Refused\n");
+			}else if (a.equals("0110")) {
+				res2.append("    .... .... .... "+a+" = Reply code: Name Exists ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", Name Exists\n");
+			}else if (a.equals("0111")) {
+				res2.append("    .... .... .... "+a+" = Reply code: RRset Exists ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", RRset Exists\n");
+			}else if (a.equals("1000")) {
+				res2.append("    .... .... .... "+a+" = Reply code: RRset does not Exist ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", RRset does not Exist\n");
+			}else if (a.equals("1001")) {
+				res2.append("    .... .... .... "+a+" = Reply code: Not Authoritative ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", Not Authoritative\n");
+			}else if (a.equals("1010")) {
+				res2.append("    .... .... .... "+a+" = Reply code: Name out of zone ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", Name out of zone\n");
+			}else if (a.equals("1011")) {
+				res2.append("    .... .... .... "+a+" = Reply code: DSO-Type not implemented ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", DSO-Type not implemented\n");
+			}else {
+				res2.append("    .... .... .... "+a+" = Reply code: Unknown ("+Integer.parseInt(a, 2)+")\n");
+				res.append(", Unknown error\n");
+			}
+		}else {
+			res.append("\n");
+		}
+		res.append(res2.toString());
+		}
+		//fin flags
+		
+		tmp=in[4]+in[5];
+		int question=Integer.parseInt(tmp,16);
+		res.append("Question: "+question+"\n");
+		tmp=in[6]+in[7];
+		int rep=Integer.parseInt(tmp,16);
+		res.append("Reponse: "+rep+"\n");
+		tmp=in[8]+in[9];
+		int arr=Integer.parseInt(tmp,16);
+		res.append("Authority RRs: "+rep+"\n");
+		tmp=in[10]+in[11];
+		int addrr=Integer.parseInt(tmp,16);
+		res.append("Additional RRs: "+rep+"\n");
+		return res.toString();
+	}
 	
+	public static String [] dnsData(String[] in, int start) {
+		String[] res=new String[Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))];
+		int tmp=0;
+		for (int i=start;i<in.length;i++) {
+			res[tmp]=in[i];
+			tmp++;
+		}
+		return res;
+	}
 	
+	public static String hexToBin(String hex){
+	    String bin = "";
+	    String binFragment = "";
+	    int iHex;
+	    hex = hex.trim();
+	    hex = hex.replaceFirst("0x", "");
+
+	    for(int i = 0; i < hex.length(); i++){
+	        iHex = Integer.parseInt(""+hex.charAt(i),16);
+	        binFragment = Integer.toBinaryString(iHex);
+
+	        while(binFragment.length() < 4){
+	            binFragment = "0" + binFragment;
+	        }
+	        bin += binFragment;
+	    }
+	    return bin;
+	}
 	
 }
