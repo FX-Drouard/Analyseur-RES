@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -839,7 +841,202 @@ public class Input_Parser {
 		tmp=in[10]+in[11];
 		int addrr=Integer.parseInt(tmp,16);
 		res.append("Additional RRs: "+rep+"\n");
+		//au dessus les 4 valeurs
+		//question
+		int i=12;
+		tmp = Input_Parser.hexToBin(in[i]);
+		if (tmp.substring(0,2)=="11") {
+			return res.toString()+"\nInvalide dns data\n";
+		}
+		StringBuilder res3=new StringBuilder();
+		Map<Integer,String> map=new HashMap<Integer,String>();
+		res.append("Queries: \n");
+		for (int j=0;j<question;j++) {
+			int totlength=0;//taille total du name de 1 question
+			int nbmots=0;//nb mots de 1 question
+			while (!in[i].equals("00")) {
+				tmp = Input_Parser.hexToBin(in[i]);
+				if (tmp.substring(0,2)=="11") {//si compression
+					int pointer=i;
+					while (!in[pointer].equals("00")) {
+						String stock=tmp.substring(2)+Input_Parser.hexToBin(in[pointer+1]);
+						int stock2=Integer.parseInt(stock,2);
+						if (map.containsKey(stock2)) {
+							res3.append(map.get(stock2));
+							pointer+=map.get(stock2).length();
+						}else {
+							return res.toString()+"\nLecture de compression invalide\n";
+						}
+					}
+					break;
+				}
+				int nbb=Integer.parseInt(in[i]);
+				totlength+=nbb;
+				i++;
+				String ra="";
+				int fin=i+nbb;
+				int index=i;
+				for (int o=i;o<fin;o++) {
+					ra=ra+in[o];
+					i++;
+				}
+				res3.append(Input_DHCP.hexToAscii(ra)+".");
+				nbmots++;
+				map.put(index, Input_DHCP.hexToAscii(ra));
+			}
+			if ((res3.charAt(res3.length()-1))=='.') {
+				res3.deleteCharAt(res3.length()-1);
+			}
+			res.append("    Name: "+res3.toString()+"\n");
+			res.append("        [Name length: "+totlength+"]\n");
+			res.append("        [Label Count: "+nbmots+"]\n");
+			nbmots=0;
+			i++;
+			//debut des if else
+			int type=Integer.parseInt(in[i]+in[i+1],16);
+			//5 types principaux + affinité
+			if (type==1) {
+				res.append("        Type: A (IPV4) (1)\n");
+			}else if (type==28) {
+				res.append("        Type: AAAA (IPV6) (28)\n");
+			}else if (type==5) {
+				res.append("        Type: CNAME (Canonical name) (5)\n");
+			}else if (type==2) {
+				res.append("        Type: NS (Name Server) (2)\n");
+			}else if (type==15) {
+				res.append("        Type: MX (Mail Server Name) (15)\n");
+			}else if (type==12) {
+				res.append("        Type: PTR (domain name PoinTeR) (12)\n");
+			}else {
+				res.append("        Type non pris en charge\n");
+			}
+			i=i+2;
+			int classe=Integer.parseInt(in[i]+in[i+1],16);
+			//5 types principaux + affinité
+			if (classe==0) {
+				res.append("        Classe: Reserved (0x0000)\n");
+			}else if (classe==1) {
+				res.append("        Classe: IN (0x0001)\n");
+			}else if (classe==2) {
+				res.append("        Classe: Unassigned (0x0002)\n");
+			}else if (classe==3) {
+				res.append("        Classe: Chaos (CH) (0x0003)\n");
+			}else if (classe==4) {
+				res.append("        Classe: Hesiod (HS) (0x0004)\n");
+			}else if ((classe>=5)&&(classe<=253)) {
+				res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
+			}else if (classe==254) {
+				res.append("        Classe: Qclass None (0x"+in[i]+in[i+1]+")\n");
+			}else if (classe==255) {
+				res.append("        Classe: Qclass *(Any) (0x"+in[i]+in[i+1]+")\n");
+			}else if ((classe>=256)&&(classe<=65279)) {
+				res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
+			}else if ((classe>=65280)&&(classe<=65534)) {
+				res.append("        Classe: Reserved for private Use (0x"+in[i]+in[i+1]+")\n");
+			}else {
+				res.append("        Classe: Reserved (0x"+in[i]+in[i+1]+")\n");
+			}
+		}
+		if (rep!=0){
+			i++;//a retirer si decalage
+			res3=new StringBuilder();
+			//answer
+			res.append("Response: \n");
+			for (int j=0;j<rep;j++) {
+				int totlength=0;//taille total du name de 1 question
+				int nbmots=0;//nb mots de 1 question
+				
+				while (!in[i].equals("00")) {
+					tmp = Input_Parser.hexToBin(in[i]);
+					
+					if (tmp.substring(0,2)=="11") {//si compression
+						int pointer=i;
+						System.out.println("o");
+						while (!in[pointer].equals("00")) {
+							String stock=tmp.substring(2)+Input_Parser.hexToBin(in[pointer+1]);
+							int stock2=Integer.parseInt(stock,2);
+							System.out.println("stock: "+stock+" stock2: "+stock2+" in[pointer]: "+in[pointer]+" pointer: "+pointer);
+							if (map.containsKey(stock2)) {
+								res3.append(map.get(stock2));
+								pointer+=map.get(stock2).length();
+							}else {
+								return res.toString()+"\nLecture de compression invalide\n";
+							}
+						}
+						break;
+					}
+					int nbb=Integer.parseInt(in[i]);
+					totlength+=nbb;
+					i++;
+					String ra="";
+					int fin=i+nbb;
+					int index=i;
+					for (int o=i;o<fin;o++) {
+						ra=ra+in[o];
+						i++;
+					}
+					res3.append(Input_DHCP.hexToAscii(ra)+".");
+					nbmots++;
+					map.put(index, Input_DHCP.hexToAscii(ra));
+				}
+				if (res3.toString().charAt(res3.toString().length())-1=='.') {
+					res3.deleteCharAt(res3.length()-1);
+				}
+				res.append("    Name: "+res3.toString()+"\n");
+				res.append("        [Name length: "+totlength+"]\n");
+				res.append("        [Label Count: "+nbmots+"]\n");
+				nbmots=0;
+				i++;
+				//debut des if else
+				int type=Integer.parseInt(in[i]+in[i+1],16);
+				//5 types principaux + affinité
+				if (type==1) {
+					res.append("        Type: A (IPV4) (1)\n");
+				}else if (type==28) {
+					res.append("        Type: AAAA (IPV6) (28)\n");
+				}else if (type==5) {
+					res.append("        Type: CNAME (Canonical name) (5)\n");
+				}else if (type==2) {
+					res.append("        Type: NS (Name Server) (2)\n");
+				}else if (type==15) {
+					res.append("        Type: MX (Mail Server Name) (15)\n");
+				}else if (type==12) {
+					res.append("        Type: PTR (domain name PoinTeR) (12)\n");
+				}else {
+					res.append("        Type non pris en charge\n");
+				}
+				i=i+2;
+				int classe=Integer.parseInt(in[i]+in[i+1],16);
+				//5 types principaux + affinité
+				if (classe==0) {
+					res.append("        Classe: Reserved (0x0000)\n");
+				}else if (classe==1) {
+					res.append("        Classe: IN (0x0001)\n");
+				}else if (classe==2) {
+					res.append("        Classe: Unassigned (0x0002)\n");
+				}else if (classe==3) {
+					res.append("        Classe: Chaos (CH) (0x0003)\n");
+				}else if (classe==4) {
+					res.append("        Classe: Hesiod (HS) (0x0004)\n");
+				}else if ((classe>=5)&&(classe<=253)) {
+					res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
+				}else if (classe==254) {
+					res.append("        Classe: Qclass None (0x"+in[i]+in[i+1]+")\n");
+				}else if (classe==255) {
+					res.append("        Classe: Qclass *(Any) (0x"+in[i]+in[i+1]+")\n");
+				}else if ((classe>=256)&&(classe<=65279)) {
+					res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
+				}else if ((classe>=65280)&&(classe<=65534)) {
+					res.append("        Classe: Reserved for private Use (0x"+in[i]+in[i+1]+")\n");
+				}else {
+					res.append("        Classe: Reserved (0x"+in[i]+in[i+1]+")\n");
+				}
+			}
+		
+		}
+		
 		return res.toString();
+		
 	}
 	
 	public static String [] dnsData(String[] in, int start) {
