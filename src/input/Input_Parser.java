@@ -661,11 +661,11 @@ public class Input_Parser {
 					res.append("    Requested IP Adress: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
 				}else if (Integer.parseInt(tmp,16)==12){ //Help Alex ça marche po
 					res.append("\n    Longueur: "+len+"\n");
-					/*StringBuilder txt =new StringBuilder();
-					for (int j=i+2;j<i+len+1;j++) {
-						txt.append(in[i]);
+					StringBuilder txt =new StringBuilder();
+					for (int j=i+2;j<i+len+2;j++) {
+						txt.append(Input_DHCP.hexToAscii(in[j]));
 					}
-					res.append("Host Name: "+Input_DHCP.hexToAscii(txt.toString())+"\n");*/
+					res.append("    Host Name: "+txt.toString()+"\n");
 				}else if (Integer.parseInt(tmp,16)==116){
 					res.append("\n    Longueur: "+len+"\n");
 					if (in[i+2].equals("00")) {
