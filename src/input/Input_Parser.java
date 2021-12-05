@@ -630,7 +630,9 @@ public class Input_Parser {
 					res.append("    IP Address Lease Time: ("+sec+"s) "+Input_DHCP.secToDays(sec)+" day(s)\n");
 				}else if (Integer.parseInt(tmp,16)==55){
 					res.append("\n    Longueur: "+len+"\n");
-					//alex c ton listing la
+					for (int j=i+1;j<i+1+len;j++) {
+						res.append("    Parameter Request List Item: ("+Integer.parseInt(in[j],16)+") "+Input_DHCP.getOption(Integer.parseInt(in[j],16))+"\n");
+					}
 				}else if (Integer.parseInt(tmp,16)==1){
 					res.append("\n    Longueur: "+len+"\n");
 					res.append("    Subnet Mask: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
@@ -659,11 +661,20 @@ public class Input_Parser {
 					res.append("    Requested IP Adress: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
 				}else if (Integer.parseInt(tmp,16)==12){ //Help Alex ça marche po
 					res.append("\n    Longueur: "+len+"\n");
-					StringBuilder txt =new StringBuilder();
+					/*StringBuilder txt =new StringBuilder();
 					for (int j=i+2;j<i+len+1;j++) {
 						txt.append(in[i]);
 					}
-					res.append("Host Name: "+Input_DHCP.hexToAscii(txt.toString())+"\n");
+					res.append("Host Name: "+Input_DHCP.hexToAscii(txt.toString())+"\n");*/
+				}else if (Integer.parseInt(tmp,16)==116){
+					res.append("\n    Longueur: "+len+"\n");
+					if (in[i+2].equals("00")) {
+						res.append("    DHCP Auto-Configuration: DoNotAutoConfigure (0)\n");
+					}else if (in[i+2].equals("01")){
+						res.append("    DHCP Auto-Configuration: AutoConfigure (1)\n");
+					}else {
+						res.append("    DHCP Auto-Configuration: Unknown ("+Integer.parseInt(in[i+2],16)+")\n");
+					}
 				}else if (Integer.parseInt(tmp,16)==42){
 					res.append("\n    Longueur: "+len+"\n");
 					res.append("    NTP Server: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
