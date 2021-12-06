@@ -44,8 +44,8 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple7.txt");
-					String path = "data/test.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
+					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple7.txt");
+					//String path = "data/exemple8.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					try{
 						la=new Lanceur(path);
 						Gui window = new Gui(path);
@@ -171,10 +171,10 @@ public class Gui {
 						tabbedPane.setTitleAt(5,"DNS/DCHP non present");
 						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
 					}
-					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame Nï¿½:"+(la.getActuel()+1));
-					Question.info("Trame: "+(a+1)+" Chargee avec succes!");}
+					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
+					Question.info("Trame: "+(a+1)+" Chargée avec succes!");}
 				catch (Exception e1) {
-					Question.warn("La trame selectionnee a un taux d'invaliditï¿½ superieur au maximum tolï¿½rï¿½, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
+					Question.warn("La trame selectionnee a un taux d'invalidité superieur au maximum toléré, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
 					System.out.println(e1.getMessage());
 				}
 			}
@@ -190,9 +190,9 @@ public class Gui {
 				String pathi=Question.getrep("Mettez le path exacte du fichier a ecrire (par defaut nous ecrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
 				String txt="";
 				try {
-					txt="Trame ne"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard Franï¿½ois-Xavier et Xia Alexandre.";
+					txt="Trame ne"+(a+1)+"\n\n Analyse de la trame: \n\n\nEthernet:\n\n"+la.ethernetToString()+"\n\n\nIP:\n\n"+la.ipHToString()+"\n\n\n"+la.protocolNameToString()+":\n\n"+la.protocoleToString()+"\n\n\n"+la.dNameToString()+":\n\n"+la.dToString()+"\n\n\nAnalyse faite par Drouard François-Xavier et Xia Alexandre.";
 				}catch (Exception e2) {
-					Question.warn("La trame selectionnï¿½e a un taux d'invaliditï¿½ superieur au maximum tolï¿½rï¿½, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
+					Question.warn("La trame selectionnée a un taux d'invalidité superieur au maximum toléré, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
 					System.out.println(e2.getMessage());
 					la.setectData(b);
 					return;
@@ -216,7 +216,7 @@ public class Gui {
 		Button credits = new Button("Credits");
 		credits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Question.info("Ce programme e ete code par:\n Xia Alexandre 28604113 \n et\n Drouard FranÃ§ois-Xavier 3800028\n Pour Sorbonne Science UE LU3IN033 2021-2022");
+				Question.info("Ce programme a été codé par:\n Xia Alexandre 28604113 \n et\n Drouard François-Xavier 3800028\n Pour Sorbonne Science UE LU3IN033 2021-2022");
 			}
 		});
 		sl_Trame.putConstraint(SpringLayout.NORTH, credits, 45, SpringLayout.SOUTH, choice);

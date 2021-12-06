@@ -44,7 +44,7 @@ public class Input_Parser {
 					if(isHex(tmps[0])) {
 						if(Integer.parseInt(tmps[0],16)==cptOc) {
 						}else {
-							throw new RuntimeException("Offset Invalide ou Ligne incomplÃ¨te Ã  la ligne : "+(numL-1));
+							throw new RuntimeException("Offset Invalide ou Ligne incompléte Ã  la ligne : "+(numL-1));
 						}
 					}
 				}else {
@@ -198,7 +198,7 @@ public class Input_Parser {
 	}
 	
 	public static String ethernetToString(String[] in) throws RuntimeException{
-		if (in.length!=14) {throw new RuntimeException("Appel erronÃ© ethernetToString");}
+		if (in.length!=14) {throw new RuntimeException("Appel erroné ethernetToString");}
 		StringBuilder res= new StringBuilder();
 		res.append("Destination: ");
 		for (int i=0;i<6;i++) {
@@ -235,7 +235,7 @@ public class Input_Parser {
 	}
 	
 	public static String ipHToString(String[] in) throws RuntimeException{
-		if (in.length!=20) {throw new RuntimeException("Appel erronÃ© ipHToString");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
 		StringBuilder res= new StringBuilder();
 		String tmp=in[0];
 		//Debut analyse Version
@@ -248,12 +248,12 @@ public class Input_Parser {
 		//Fin Analyse Version et Debut Analyse Taille
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		if (tailleH==5) {
-			res.append("Taille de l'entete (aucune option specifiÃ©e): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
+			res.append("Taille de l'entete (aucune option specifiée): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
 		}else if (tailleH>5){
 			res.append("\n Taille de l'entete avec option: "+tailleH*4+" \n");
 		}else {throw new RuntimeException("Taille de l'entete totalement invalide!");}
 		//Fin Analyse Taille et Debut Analyse TOS
-		res.append("TOS: Non UtilisÃ© dans notre cadre: 0x"+in[1]+"\n");
+		res.append("TOS: Non Utilisé dans notre cadre: 0x"+in[1]+"\n");
 		//Fin Analyse TOS et Debut Analyse Taille total
 		tmp ="";
 		for (int i=2;i<4;i++) {
@@ -282,14 +282,14 @@ public class Input_Parser {
 		for (int i=0;i<3;i++) {
 			flags+=bin.charAt(i);
 		}
-		res.append("Flags\n    Champ RÃ©servÃ©: "+flags.charAt(0)+"\n    Champ DF: "+flags.charAt(1)+"\n    Champ MF: "+flags.charAt(2)+"\n");
+		res.append("Flags\n    Champ Réservé: "+flags.charAt(0)+"\n    Champ DF: "+flags.charAt(1)+"\n    Champ MF: "+flags.charAt(2)+"\n");
 		int offset;
 		{String off="";
 		for (int i=3;i<bin.length();i++) {
 			off+=bin.charAt(i);
 		}
 		offset=Integer.parseInt(off,2);}
-		if (offset==0) {res.append("Offset : 0, Paquet non FragmentÃ©\n");}else {res.append("Offset: "+offset+" Paquet FragmentÃ©\n");}
+		if (offset==0) {res.append("Offset : 0, Paquet non Fragmenté\n");}else {res.append("Offset: "+offset+" Paquet Fragmenté\n");}
 		//Fin analyse Offset+flags Debut analyse TTL
 		tmp ="";
 		for (int i=8;i<9;i++) {
@@ -372,7 +372,7 @@ public class Input_Parser {
 	
 	
 	public static String protocolenameToString(String[] in ) {
-		if (in.length!=20) {throw new RuntimeException("Appel erronÃ© ipHToString");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
 		String tmp ="";
 		for (int i=9;i<10;i++) {
 			tmp+=in[i];
@@ -427,14 +427,14 @@ public class Input_Parser {
 	}
 	
 	public static int protocoleHStartByIP(String [] in) {
-		if (in.length!=20) {throw new RuntimeException("Appel erronÃ© protocoleStartByIP");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné protocoleStartByIP");}
 		String tmp = in[0];
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		return 4*tailleH+14;
 	}
 	
 	public static String protocoleHToString(String[] in) {
-		if (in.length!=8) {throw new RuntimeException("Appel erronÃ© protocoleToString");}
+		if (in.length!=8) {throw new RuntimeException("Appel erroné protocoleToString");}
 		StringBuilder res= new StringBuilder();
 		String tmp =in[0];
 		tmp=tmp+in[1];
@@ -454,13 +454,13 @@ public class Input_Parser {
 	}
 	
 	public static int udpLong(String [] in) {
-		if (in.length!=8) {throw new RuntimeException("Appel erronÃ© udpLong");}
+		if (in.length!=8) {throw new RuntimeException("Appel erroné udpLong");}
 		String tmp = in[4]+in[5];
 		return Integer.parseInt(tmp,16);
 	}
 	
 	public static String dNameToString(String[] in){
-		if (in.length!=8) {throw new RuntimeException("Appel erronÃ© protocoleToString");}
+		if (in.length!=8) {throw new RuntimeException("Appel erroné protocoleToString");}
 		String tmp =in[0];
 		tmp=tmp+in[1];
 		if ((Integer.parseInt(tmp,16)==67)||(Integer.parseInt(tmp,16)==68)) {
@@ -476,11 +476,11 @@ public class Input_Parser {
 			}
 			else if (Integer.parseInt(tmp,16)==53) {
 				return "DNS";
-		}else { return "DNS/DHCP non prÃ©sent";}}
+		}else { return "DNS/DHCP non présent";}}
 	}
 	
 	public static int dStartByIP(String [] in) {
-		if (in.length!=20) {throw new RuntimeException("Appel erronÃ© dStartByIP");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné dStartByIP");}
 		String tmp = in[0];
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		return 4*tailleH+14+8;
@@ -497,16 +497,16 @@ public class Input_Parser {
 	}
 	
 	public static String dhcpToString(String[] in, int taille) {
-		if (in.length!=taille) {throw new RuntimeException("Appel erronÃ© dhcpToString");}
+		if (in.length!=taille) {throw new RuntimeException("Appel erroné dhcpToString");}
 		StringBuilder res= new StringBuilder();
 		//StringBuilder res2= new StringBuilder();res2.append("DHCP Message Type: Unknown\n");
 		String tmp=in[0];
 		if (tmp.equals("01")) {
 			res.append("Message Type: Boot Request (0x01)\n");
 		}else if (tmp.equals("02")) {
-			res.append("Message Type: Boot Reply (0x02)\\n");
+			res.append("Message Type: Boot Reply (0x02)\n");
 		}else {
-			res.append("Message Type: Unknown (0x"+tmp+")\\n");
+			res.append("Message Type: Unknown (0x"+tmp+")\n");
 		}
 		tmp=in[1];
 		res.append("Hardware Type: "+Input_DHCP.getHardware(Integer.parseInt(tmp,16))+"\n");
@@ -658,7 +658,7 @@ public class Input_Parser {
 				}else if (Integer.parseInt(tmp,16)==50){
 					res.append("\n    Longueur: "+len+"\n");
 					res.append("    Requested IP Adress: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
-				}else if (Integer.parseInt(tmp,16)==12){ //Help Alex Ã§a marche po
+				}else if (Integer.parseInt(tmp,16)==12){ 
 					res.append("\n    Longueur: "+len+"\n");
 					StringBuilder txt =new StringBuilder();
 					for (int j=i+2;j<i+len+2;j++) {
@@ -674,6 +674,24 @@ public class Input_Parser {
 					}else {
 						res.append("    DHCP Auto-Configuration: Unknown ("+Integer.parseInt(in[i+2],16)+")\n");
 					}
+				}else if (Integer.parseInt(tmp,16)==61){
+					res.append("\n    Longueur: "+len+"\n");
+					res.append("    Hardware Type: "+Input_DHCP.getHardware(Integer.parseInt(in[i+2], 16))+" (0x"+in[i+2]+")\n");
+					StringBuilder txt=new StringBuilder();
+					for (int j=i+3;j<i+2+len;j++) {
+						txt.append(in[j]);
+						if (j!=i+1+len) {
+							txt.append(":");
+						}
+					}
+					res.append("    Client Hardware Address: "+txt.toString()+"\n");
+				}else if (Integer.parseInt(tmp,16)==60){ 
+					res.append("\n    Longueur: "+len+"\n");
+					StringBuilder txt =new StringBuilder();
+					for (int j=i+2;j<i+len+2;j++) {
+						txt.append(Input_DHCP.hexToAscii(in[j]));
+					}
+					res.append("    Vendor Class Identifier: "+txt.toString()+"\n");
 				}else if (Integer.parseInt(tmp,16)==42){
 					res.append("\n    Longueur: "+len+"\n");
 					res.append("    NTP Server: "+Integer.parseInt(in[i+2],16)+"."+Integer.parseInt(in[i+3],16)+"."+Integer.parseInt(in[i+4],16)+"."+Integer.parseInt(in[i+5],16)+"\n");
@@ -682,11 +700,11 @@ public class Input_Parser {
 				}
 				
 				
-				//Attention il faut incrÃ©menter de 2 pour commencer au bon endroit
+				//Attention il faut incrémenter de 2 pour commencer au bon endroit
 				i+=len+2;
 			}
 		}catch (Exception e){
-			return res.toString()+"Paquet DHCP malformÃ©!\n";
+			return res.toString()+"Paquet DHCP malformé!\n";
 		}
 		//Padding
 		if(lastind>240) {
@@ -706,7 +724,7 @@ public class Input_Parser {
 	}
 	
 	public static String dnsToString(String[] in, int taille) {
-		if (in.length!=taille) {throw new RuntimeException("Appel erronÃ© dhcpToString");}
+		if (in.length!=taille) {throw new RuntimeException("Appel erroné dhcpToString");}
 		StringBuilder res=new StringBuilder();
 		res.append("Transaction id: 0x"+in[0]+in[1]+"\n");
 		//flags
@@ -715,7 +733,7 @@ public class Input_Parser {
 		{StringBuilder res2= new StringBuilder();
 		boolean resp=false;
 		String bin=Input_Parser.hexToBin(tmp);
-		if(bin.charAt(0)==0) {
+		if((""+bin.charAt(0)).equals("0")) {
 			res2.append("    "+bin.charAt(0)+"... .... .... .... = Response: message is a query\n");
 		}else {
 			res2.append("    "+bin.charAt(0)+"... .... .... .... = Response: message a response\n");
@@ -950,7 +968,7 @@ public class Input_Parser {
 			//debut des if else
 			int type=Integer.parseInt(in[i]+in[i+1],16);
 
-			//5 types principaux + affinitÃ©
+			//5 types principaux + affinité
 			if (type==1) {
 				res.append("        Type: A (IPV4) (1)\n");
 			}else if (type==28) {
@@ -1029,7 +1047,7 @@ public class Input_Parser {
 					//Get the name until 00
 					while (!(in[pointer].equals("00"))) {
 						
-						//Tentative de vÃ©rification de pointeur vers un autre pointeur mais impossible sur n pointeurs eparpilles
+						//Tentative de vérification de pointeur vers un autre pointeur mais impossible sur n pointeurs eparpilles
 						/*String cal=Input_Parser.hexToBin(in[pointer]).substring(0,2);
 						int pt=Integer.parseInt(in[pointer].substring(2)+Input_Parser.hexToBin(in[pointer+1]),2);
 						while(cal.equals("11")) {
@@ -1128,7 +1146,7 @@ public class Input_Parser {
 			}
 			i=i+2;
 			int classe=Integer.parseInt(in[i]+in[i+1],16);
-			//5 types principaux + affinitÃ©
+			//5 types principaux + affinité
 			if (classe==0) {
 				res.append("        Classe: Reserved (0x0000)\n");
 			}else if (classe==1) {
