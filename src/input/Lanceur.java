@@ -23,6 +23,8 @@ public class Lanceur {
 		try {
 			return Input_Parser.ethernetToString(Input_Parser.ethernetData(select));
 		}catch (Exception e) {
+			//e.printStackTrace();
+			//e.getMessage();
 			return "Ethernet Error parsing";
 		}
 	}
@@ -38,8 +40,8 @@ public class Lanceur {
 			}
 			
 		}catch (Exception e) {
-			e.printStackTrace();
-			e.getMessage();
+			//e.printStackTrace();
+			//e.getMessage();
 			return "IP Error Parsing";
 		}
 	}
@@ -58,6 +60,8 @@ public class Lanceur {
 				return "Le Protocole: \""+Input_Parser.protocolenameToString(Input_Parser.ipHData(select))+"\" n'est pas pris en charge par ce projet!";
 			}
 		}catch (Exception e) {
+			//e.printStackTrace();
+			//e.getMessage();
 			return "Error Parsing du protocole";
 		}
 		
@@ -67,6 +71,8 @@ public class Lanceur {
 		try{
 			return Input_Parser.protocolenameToString(Input_Parser.ipHData(select));
 		}catch (Exception e) {
+			//e.printStackTrace();
+			//e.getMessage();
 			return "Unknown";
 		}
 	}
@@ -75,6 +81,8 @@ public class Lanceur {
 		try{
 			return Input_Parser.dNameToString(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select))));
 		}catch (Exception e) {
+			//e.printStackTrace();
+			//e.getMessage();
 			return "Unknown D";
 		}
 	}
@@ -87,6 +95,8 @@ public class Lanceur {
 				return Input_Parser.dnsToString(Input_Parser.dnsData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))),Input_Parser.udpLong(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select)))));
 			}else {return "Un Protocole Non Pris en charge est Détecter!";}
 		}catch (Exception e) {
+			//e.printStackTrace();
+			//e.getMessage();
 			return "Error Parsing de: "+this.dNameToString();
 		}
 		
