@@ -44,7 +44,7 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple7.txt");
+					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple8.txt");
 					//String path = "data/exemple8.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					try{
 						la=new Lanceur(path);
