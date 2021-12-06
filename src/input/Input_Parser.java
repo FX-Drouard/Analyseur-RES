@@ -44,7 +44,6 @@ public class Input_Parser {
 					if(isHex(tmps[0])) {
 						if(Integer.parseInt(tmps[0],16)==cptOc) {
 						}else {
-							System.out.println("ICI");
 							throw new RuntimeException("Offset Invalide ou Ligne incomplète à la ligne : "+(numL-1));
 						}
 					}
@@ -853,46 +852,88 @@ public class Input_Parser {
 		int addrr=Integer.parseInt(tmp,16);
 		res.append("Additional RRs: "+rep+"\n");
 		//au dessus les 4 valeurs
+		
+		
 		//question
 		int i=12;
 		tmp = Input_Parser.hexToBin(in[i]);
-		if (tmp.substring(0,2)=="11") {
+		if (tmp.substring(0,2).equals("11")) {
 			return res.toString()+"\nInvalide dns data\n";
 		}
 		StringBuilder res3=new StringBuilder();
+		
+		//Dictionnaire contenant les offsets et les mots
 		Map<Integer,String> map=new HashMap<Integer,String>();
+		
+		
 		res.append("Queries: \n");
 		for (int j=0;j<question;j++) {
+			
 			int totlength=0;//taille total du name de 1 question
 			int nbmots=0;//nb mots de 1 question
+			
+			
 			while (!in[i].equals("00")) {
+				boolean isC=false;
+				int index=i;
 				tmp = Input_Parser.hexToBin(in[i]);
-				if (tmp.substring(0,2)=="11") {//si compression
-					int pointer=i;
-					while (!in[pointer].equals("00")) {
-						String stock=tmp.substring(2)+Input_Parser.hexToBin(in[pointer+1]);
-						int stock2=Integer.parseInt(stock,2);
-						if (map.containsKey(stock2)) {
-							res3.append(map.get(stock2));
-							pointer+=map.get(stock2).length();
-						}else {
-							return res.toString()+"\nLecture de compression invalide\n";
-						}
+				
+				//Compression part
+				while (tmp.substring(0,2).equals("11")) {
+					int colen=0;
+					isC=true;
+
+					
+					//Get the value of offset
+					int pointer=Integer.parseInt(tmp.substring(2)+Input_Parser.hexToBin(in[i+1]),2);
+					//If it points the same offset the packet is wrong
+					if(pointer>=i) {
+						return "DNS Invalid Data\n";
 					}
+					//Get the name until 00
+					
+					while (!(in[pointer].equals("00"))) {
+						if(map.containsKey(pointer)) {
+							res3.append(map.get(pointer)+".");
+							nbmots+=1;
+						}else {
+							
+							return res.toString()+"DNS Invalid";
+						}
+						colen+=Integer.parseInt(in[pointer],16);
+						pointer+=(1+Integer.parseInt(in[pointer],16));
+						
+						
+					}
+					
+					totlength+=colen;
+					i+=2;
+					tmp= hexToBin(in[i]);
+					
+				}
+				if(isC) {
+					i--;
 					break;
 				}
+				
+				//Word length
 				int nbb=Integer.parseInt(in[i]);
 				totlength+=nbb;
 				i++;
 				String ra="";
 				int fin=i+nbb;
-				int index=i;
+				
+				
+				//Get the word
 				for (int o=i;o<fin;o++) {
 					ra=ra+in[o];
 					i++;
 				}
 				res3.append(Input_DHCP.hexToAscii(ra)+".");
+				//Number of words
 				nbmots++;
+				
+				//Stock the full name
 				map.put(index, Input_DHCP.hexToAscii(ra));
 			}
 			if ((res3.charAt(res3.length()-1))=='.') {
@@ -902,7 +943,171 @@ public class Input_Parser {
 			res.append("        [Name length: "+totlength+"]\n");
 			res.append("        [Label Count: "+nbmots+"]\n");
 			nbmots=0;
+			
+			//We need to increment to the next octet
 			i++;
+			
+			//debut des if else
+			int type=Integer.parseInt(in[i]+in[i+1],16);
+
+			//5 types principaux + affinité
+			if (type==1) {
+				res.append("        Type: A (IPV4) (1)\n");
+			}else if (type==28) {
+				res.append("        Type: AAAA (IPV6) (28)\n");
+			}else if (type==5) {
+				res.append("        Type: CNAME (Canonical name) (5)\n");
+			}else if (type==2) {
+				res.append("        Type: NS (Name Server) (2)\n");
+			}else if (type==15) {
+				res.append("        Type: MX (Mail Server Name) (15)\n");
+			}else if (type==12) {
+				res.append("        Type: PTR (domain name PoinTeR) (12)\n");
+			}else {
+				res.append("        Type non pris en charge\n");
+			}
+			//Fin des types
+			i=i+2;
+			int classe=Integer.parseInt(in[i]+in[i+1],16);
+			if (classe==0) {
+				res.append("        Classe: Reserved (0x0000)\n");
+			}else if (classe==1) {
+				res.append("        Classe: IN (0x0001)\n");
+			}else if (classe==2) {
+				res.append("        Classe: Unassigned (0x0002)\n");
+			}else if (classe==3) {
+				res.append("        Classe: Chaos (CH) (0x0003)\n");
+			}else if (classe==4) {
+				res.append("        Classe: Hesiod (HS) (0x0004)\n");
+			}else if ((classe>=5)&&(classe<=253)) {
+				res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
+			}else if (classe==254) {
+				res.append("        Classe: Qclass None (0x"+in[i]+in[i+1]+")\n");
+			}else if (classe==255) {
+				res.append("        Classe: Qclass *(Any) (0x"+in[i]+in[i+1]+")\n");
+			}else if ((classe>=256)&&(classe<=65279)) {
+				res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
+			}else if ((classe>=65280)&&(classe<=65534)) {
+				res.append("        Classe: Reserved for private Use (0x"+in[i]+in[i+1]+")\n");
+			}else {
+				res.append("        Classe: Reserved (0x"+in[i]+in[i+1]+")\n");
+			}
+			//Fin des classes
+			i+=2;
+		}
+		
+		
+		
+		res3=new StringBuilder();
+		
+		
+		//Answer Part
+		if(rep >0) res.append("Answer: \n");
+		for (int j=0;j<rep;j++) {
+			
+			int totlength=0;//taille total du name de 1 question
+			int nbmots=0;//nb mots de 1 question
+			
+			while (!in[i].equals("00")) {
+				boolean isC=false;
+				tmp = Input_Parser.hexToBin(in[i]);
+				
+				
+				//Compression part
+				while (tmp.substring(0,2).equals("11")) {
+					int colen=0;
+					isC=true;
+					
+					//Get the value of offset
+					
+					int pointer=Integer.parseInt(tmp.substring(2)+Input_Parser.hexToBin(in[i+1]),2);
+					
+					if(pointer>=i) {
+						return "DNS Invalid Data\n";
+					}
+					
+					//Get the name until 00
+					while (!(in[pointer].equals("00"))) {
+						
+						//Tentative de vérification de pointeur vers un autre pointeur mais impossible sur n pointeurs eparpilles
+						/*String cal=Input_Parser.hexToBin(in[pointer]).substring(0,2);
+						int pt=Integer.parseInt(in[pointer].substring(2)+Input_Parser.hexToBin(in[pointer+1]),2);
+						while(cal.equals("11")) {
+							cal=Input_Parser.hexToBin(in[Integer.parseInt(in[pt])]).substring(0,2);
+							if(cal.equals("11"))
+								pt=Integer.parseInt(in[pt].substring(2)+Input_Parser.hexToBin(in[pt+1]),2);
+						}
+						
+						while(!(in[pt].equals("00"))) {
+							if(map.containsKey(pt)) {
+								res3.append(map.get(pt)+".");
+								nbmots+=1;
+							}else {
+								return res.toString()+"DNS Invalid data Pointer Answer of Pointer";
+							}
+							colen+=Integer.parseInt(in[pointer],16);
+							pt+=(1+Integer.parseInt(in[pt],16));
+						}*/
+						
+						
+						if(map.containsKey(pointer)) {
+							res3.append(map.get(pointer)+".");
+							nbmots+=1;
+						}else {
+							return res.toString()+"DNS Invalid data Pointer Answer";
+						}
+						colen+=Integer.parseInt(in[pointer],16);
+						pointer+=(1+Integer.parseInt(in[pointer],16));
+						
+						
+					}
+					
+					totlength+=colen;
+					i+=2;
+					tmp= hexToBin(in[i]);
+					
+					
+				}
+				
+				//if we did compression there is no 00 in the end
+				if(isC) {
+					i--;
+					break;
+				}
+				
+				//Total length
+				int aclength=Integer.parseInt(in[i]);
+				totlength+=aclength;
+				i++;
+				String ra="";
+				int fin=i+aclength;
+				int index=i;
+				for (int o=i;o<fin;o++) {
+					ra=ra+in[o];
+					i++;
+				}
+				res3.append(Input_DHCP.hexToAscii(ra)+".");
+				nbmots++;
+				//Put the word in hashmap if new offset
+				map.put(index, Input_DHCP.hexToAscii(ra));
+			}
+			
+			//remove the dot at the end
+			if (res3.toString().charAt(res3.toString().length()-1)=='.') {
+				res3.deleteCharAt(res3.length()-1);
+			}
+			
+			//We need to increment to the next octet
+			i++;
+			
+
+			res.append("    Name: "+res3.toString()+"\n");
+			res.append("        [Name length: "+totlength+"]\n");
+			res.append("        [Label Count: "+nbmots+"]\n");
+			nbmots=0;
+			
+						
+			
 			//debut des if else
 			int type=Integer.parseInt(in[i]+in[i+1],16);
 			//5 types principaux + affinité
@@ -947,104 +1152,145 @@ public class Input_Parser {
 			}else {
 				res.append("        Classe: Reserved (0x"+in[i]+in[i+1]+")\n");
 			}
-		}
-		if (rep!=0){
-			i++;//a retirer si decalage
-			res3=new StringBuilder();
-			//answer
-			res.append("Response: \n");
-			for (int j=0;j<rep;j++) {
-				int totlength=0;//taille total du name de 1 question
-				int nbmots=0;//nb mots de 1 question
-				
-				while (!in[i].equals("00")) {
-					tmp = Input_Parser.hexToBin(in[i]);
-					
-					if (tmp.substring(0,2)=="11") {//si compression
-						int pointer=i;
-						System.out.println("o");
-						while (!in[pointer].equals("00")) {
-							String stock=tmp.substring(2)+Input_Parser.hexToBin(in[pointer+1]);
-							int stock2=Integer.parseInt(stock,2);
-							System.out.println("stock: "+stock+" stock2: "+stock2+" in[pointer]: "+in[pointer]+" pointer: "+pointer);
-							if (map.containsKey(stock2)) {
-								res3.append(map.get(stock2));
-								pointer+=map.get(stock2).length();
-							}else {
-								return res.toString()+"\nLecture de compression invalide\n";
-							}
-						}
-						break;
-					}
-					int nbb=Integer.parseInt(in[i]);
-					totlength+=nbb;
-					i++;
-					String ra="";
-					int fin=i+nbb;
-					int index=i;
-					for (int o=i;o<fin;o++) {
-						ra=ra+in[o];
-						i++;
-					}
-					res3.append(Input_DHCP.hexToAscii(ra)+".");
-					nbmots++;
-					map.put(index, Input_DHCP.hexToAscii(ra));
-				}
-				if (res3.toString().charAt(res3.toString().length())-1=='.') {
-					res3.deleteCharAt(res3.length()-1);
-				}
-				res.append("    Name: "+res3.toString()+"\n");
-				res.append("        [Name length: "+totlength+"]\n");
-				res.append("        [Label Count: "+nbmots+"]\n");
-				nbmots=0;
-				i++;
-				//debut des if else
-				int type=Integer.parseInt(in[i]+in[i+1],16);
-				//5 types principaux + affinité
-				if (type==1) {
-					res.append("        Type: A (IPV4) (1)\n");
-				}else if (type==28) {
-					res.append("        Type: AAAA (IPV6) (28)\n");
-				}else if (type==5) {
-					res.append("        Type: CNAME (Canonical name) (5)\n");
-				}else if (type==2) {
-					res.append("        Type: NS (Name Server) (2)\n");
-				}else if (type==15) {
-					res.append("        Type: MX (Mail Server Name) (15)\n");
-				}else if (type==12) {
-					res.append("        Type: PTR (domain name PoinTeR) (12)\n");
-				}else {
-					res.append("        Type non pris en charge\n");
-				}
-				i=i+2;
-				int classe=Integer.parseInt(in[i]+in[i+1],16);
-				//5 types principaux + affinité
-				if (classe==0) {
-					res.append("        Classe: Reserved (0x0000)\n");
-				}else if (classe==1) {
-					res.append("        Classe: IN (0x0001)\n");
-				}else if (classe==2) {
-					res.append("        Classe: Unassigned (0x0002)\n");
-				}else if (classe==3) {
-					res.append("        Classe: Chaos (CH) (0x0003)\n");
-				}else if (classe==4) {
-					res.append("        Classe: Hesiod (HS) (0x0004)\n");
-				}else if ((classe>=5)&&(classe<=253)) {
-					res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
-				}else if (classe==254) {
-					res.append("        Classe: Qclass None (0x"+in[i]+in[i+1]+")\n");
-				}else if (classe==255) {
-					res.append("        Classe: Qclass *(Any) (0x"+in[i]+in[i+1]+")\n");
-				}else if ((classe>=256)&&(classe<=65279)) {
-					res.append("        Classe: Unassigned (0x"+in[i]+in[i+1]+")\n");
-				}else if ((classe>=65280)&&(classe<=65534)) {
-					res.append("        Classe: Reserved for private Use (0x"+in[i]+in[i+1]+")\n");
-				}else {
-					res.append("        Classe: Reserved (0x"+in[i]+in[i+1]+")\n");
-				}
+			
+			//We need to get to the next octet now that class is done
+			i+=2;
+			
+			//Get the 4 next octets for TTL
+			try {
+				int ttl=Integer.parseInt(in[i]+in[i+1]+in[i+2]+in[i+3],16);
+				res.append("Time to Live : "+ttl+" seconds\n");
+			}catch(Exception e) {
+				return "DNS Invalid Data TTL\n";
 			}
-		
+			
+			//Rdata part
+			i+=4;
+			
+			try {
+				
+				int rdlength=Integer.parseInt(in[i]+in[i+1],16);
+				res.append("DATA Length : "+rdlength+"\n");
+				//The data
+				i+=2;
+				res3=new StringBuilder();
+				//IPV4 case
+				//Compression does not work on ipadresses
+				if (type==1) {
+					int ipc=0;
+					while (ipc<rdlength) {
+						res3.append(Integer.parseInt(in[i],16)+".");
+						ipc++;
+						i++;
+						
+					}
+					//remove the dot at the end
+					if (res3.toString().charAt(res3.toString().length()-1)=='.') {
+						res3.deleteCharAt(res3.length()-1);
+					}
+					
+					
+					//We need to increment to the next octet
+					i++;
+					res.append("    IPv4 Address : "+res3.toString()+"\n");
+			
+				}else if (type==28) {
+					//V6 address we have to get 2 octets each time
+					int ipc=0;
+					while (ipc<rdlength) {
+						res3.append(in[i]+in[i+1]+":");
+						ipc+=2;
+						i+=2;
+					}
+					//remove the dot at the end
+					if (res3.toString().charAt(res3.toString().length()-1)==':') {
+						res3.deleteCharAt(res3.length()-1);
+					}
+					//We need to increment to the next octet
+					i++;
+					res.append("    IPv6 Address : "+res3.toString()+"\n");
+				}else if (type==5) {
+					//CNAME
+					int ipc=0;
+					while (ipc<rdlength) {
+						boolean isC=false;
+						tmp = Input_Parser.hexToBin(in[i]);
+						
+						
+						//Compression part
+						while (tmp.substring(0,2).equals("11")) {
+							isC=true;
+							
+							//Get the value of offset
+							int pointer=Integer.parseInt(tmp.substring(2)+Input_Parser.hexToBin(in[i+1]),2);
+							if(pointer>=i) {
+								return "DNS Invalid Data pointerCname\n";
+							}
+							//Get the name until 00
+							while (!(in[pointer].equals("00"))) {
+								if(map.containsKey(pointer)) {
+									res3.append(map.get(pointer)+".");
+								}else {
+									
+									return res.toString()+"DNS Invalid CNAME\n";
+								}
+								pointer+=(1+Integer.parseInt(in[pointer],16));
+								
+								
+							}
+							i+=2;
+							ipc+=2;
+							if(ipc>=rdlength) {
+								break;
+							}
+							
+							tmp= hexToBin(in[i]);
+							
+						}
+						
+						//if we did compression there is no 00 in the end
+						if(isC) {
+							i--;
+							break;
+						}
+						
+						//Total length
+						int curlength=Integer.parseInt(in[i]);
+						i++;
+						String ra="";
+						int fin=i+curlength;
+						int index=i;
+						for (int o=i;o<fin;o++) {
+							ra=ra+in[o];
+							i++;
+						}
+						res3.append(Input_DHCP.hexToAscii(ra)+".");
+						map.put(index-1, Input_DHCP.hexToAscii(ra));
+						ipc+=curlength+1;
+						
+					}
+					if (res3.toString().charAt(res3.toString().length()-1)=='.') {
+						res3.deleteCharAt(res3.length()-1);
+					}
+					res.append("CNAME : "+res3.toString()+"\n");
+					i++;
+				}else if (type==2) {
+					res.append("        TODO\n");
+				}else if (type==15) {
+					res.append("        TODO\n");
+				}else if (type==12) {
+					res.append("        TODO\n");
+				}else {
+					i+=rdlength;
+				}
+				
+				
+			}catch(Exception e) {
+				return "DNS Invalid Data\n";
+			}
 		}
+		
+		
 		
 		return res.toString();
 		
