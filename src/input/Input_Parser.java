@@ -582,7 +582,12 @@ public class Input_Parser {
 					res.append("DHCP Option: Unknown "+index+"\n");
 				}
 				
-				int len=Integer.parseInt(in[i+1],16);
+				int len=0;
+				try{
+					len=Integer.parseInt(in[i+1],16);
+				}catch (Exception e) {
+					len=0;
+				}
 				//option end 255
 				if (tmp.equals("ff")||tmp.equals("FF")) {
 					lastind=i+len+1;
@@ -715,8 +720,12 @@ public class Input_Parser {
 				}
 				pad.append(in[i]);
 			}
-			res.append(""
-					+ "\nPadding : "+pad.toString());
+			if (pad.length()!=0) {
+				res.append(""+"\nPadding : "+pad.toString());
+			}else {
+				res.append(""+"\nPadding : No Padding");
+			}
+			
 		}
 		
 		return res.toString();

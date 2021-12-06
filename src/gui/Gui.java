@@ -61,9 +61,10 @@ public class Gui {
 					}
 					
 				} catch (Exception e) {
-					e.printStackTrace();
-					e.getMessage();
+					//e.printStackTrace();
+					//e.getMessage();
 					Question.warn(e.toString());
+					Question.info("Veuillez relancer le programme en ayant verifier la ligne de l'erreur!");
 				}
 			}
 			
@@ -158,7 +159,7 @@ public class Gui {
 			public void actionPerformed(ActionEvent e) {
 				int a=choice.getSelectedIndex();
 				la.setectData(a);
-				try {
+				//try {
 					IP.setText(la.ipHToString());
 					Ethernet.setText(la.ethernetToString());
 					Brut.setText(la.brutToString());
@@ -172,11 +173,11 @@ public class Gui {
 						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
 					}
 					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
-					Question.info("Trame: "+(a+1)+" Chargée avec succes!");}
-				catch (Exception e1) {
+					Question.info("Trame: "+(a+1)+" Chargée avec succes!");//}
+				/*catch (Exception e1) {
 					Question.warn("La trame selectionnee a un taux d'invalidité superieur au maximum toléré, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
 					System.out.println(e1.getMessage());
-				}
+				}*/
 			}
 		});
 		Trame.add(bouton);

@@ -20,10 +20,18 @@ public class Lanceur {
 		
 	}
 	public String ethernetToString() {
-		return Input_Parser.ethernetToString(Input_Parser.ethernetData(select));
+		try {
+			return Input_Parser.ethernetToString(Input_Parser.ethernetData(select));
+		}catch (Exception e) {
+			return "Ethernet Error parsing";
+		}
 	}
 	public String ipHToString() {
-		return Input_Parser.ipHToString(Input_Parser.ipHData(select));
+		try {
+			return Input_Parser.ipHToString(Input_Parser.ipHData(select));
+		}catch (Exception e) {
+			return "IP Error Parsing";
+		}
 	}
 	public String brutToString() {
 		String res ="";
@@ -33,28 +41,44 @@ public class Lanceur {
 		return res;
 	}
 	public String protocoleToString() {
-		if (Input_Parser.protocolenameToString(Input_Parser.ipHData(select)).equals("UDP")) {
-			return Input_Parser.protocoleHToString(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select))));
-		}else {
-			return "Le Protocole: \""+Input_Parser.protocolenameToString(Input_Parser.ipHData(select))+"\" n'est pas pris en charge par ce projet!";
+		try{
+			if (Input_Parser.protocolenameToString(Input_Parser.ipHData(select)).equals("UDP")) {
+				return Input_Parser.protocoleHToString(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select))));
+			}else {
+				return "Le Protocole: \""+Input_Parser.protocolenameToString(Input_Parser.ipHData(select))+"\" n'est pas pris en charge par ce projet!";
+			}
+		}catch (Exception e) {
+			return "Error Parsing du protocole";
 		}
+		
 	}
 	
 	public String protocolNameToString() {
-		return Input_Parser.protocolenameToString(Input_Parser.ipHData(select));
+		try{
+			return Input_Parser.protocolenameToString(Input_Parser.ipHData(select));
+		}catch (Exception e) {
+			return "Unknown";
+		}
 	}
 	
 	public String dNameToString() {
-		return Input_Parser.dNameToString(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select))));
+		try{
+			return Input_Parser.dNameToString(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select))));
+		}catch (Exception e) {
+			return "Unknown D";
+		}
 	}
 	
 	public String dToString() {
-		if (this.dNameToString().equals("DHCP")) {
-			
-			return Input_Parser.dhcpToString(Input_Parser.dhcpData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))),Input_Parser.udpLong(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select)))));
-		}else if (this.dNameToString().equals("DNS")) {
-			return Input_Parser.dnsToString(Input_Parser.dnsData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))),Input_Parser.udpLong(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select)))));
-		}else {return "Un Protocole Non Pris en charge est Détecter!";}
+		try{
+			if (this.dNameToString().equals("DHCP")) {
+				return Input_Parser.dhcpToString(Input_Parser.dhcpData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))),Input_Parser.udpLong(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select)))));
+			}else if (this.dNameToString().equals("DNS")) {
+				return Input_Parser.dnsToString(Input_Parser.dnsData(select, Input_Parser.dStartByIP(Input_Parser.ipHData(select))),Input_Parser.udpLong(Input_Parser.protocoleHData(select, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(select)))));
+			}else {return "Un Protocole Non Pris en charge est Détecter!";}
+		}catch (Exception e) {
+			return "Error Parsing de: "+this.dNameToString();
+		}
 		
 	}
 	
