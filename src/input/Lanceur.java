@@ -28,8 +28,18 @@ public class Lanceur {
 	}
 	public String ipHToString() {
 		try {
-			return Input_Parser.ipHToString(Input_Parser.ipHData(select));
+			StringBuilder res=new StringBuilder().append(Input_Parser.ipHToString(Input_Parser.ipHData(select)));
+			if (Input_Parser.getIpOptTaille(Input_Parser.ipHData(select))==0) {
+				return res.toString();
+			}else if (Input_Parser.getIpOptTaille(Input_Parser.ipHData(select))>0) {
+				return res.toString()+Input_Parser.ipOptToString(Input_Parser.ipOptData(select, Input_Parser.getIpOptTaille(Input_Parser.ipHData(select))), Input_Parser.getIpOptTaille(Input_Parser.ipHData(select)));
+			}else {
+				return res.toString()+"\noption Invalide\n";
+			}
+			
 		}catch (Exception e) {
+			e.printStackTrace();
+			e.getMessage();
 			return "IP Error Parsing";
 		}
 	}
