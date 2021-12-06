@@ -283,7 +283,7 @@ public class Input_Parser {
 		if (String.valueOf(tmp.charAt(0)).equals("4")) {
 			res.append("Version: 4 (0x"+tmp.charAt(0)+")\n");
 		}else if (String.valueOf(tmp.charAt(0)).equals("6")) {
-			throw new RuntimeException("IPV6 non pris en charge par le projet (0x"+tmp.charAt(0)+") \n");
+			throw new RuntimeException("IPV6 non pris en charge par le projet (0x"+tmp.charAt(0)+")\n");
 		}
 		else {throw new RuntimeException("Attention la trame est corrompu/invalide: "+String.valueOf(tmp.charAt(0)));}
 		//Fin Analyse Version et Debut Analyse Taille
@@ -291,7 +291,7 @@ public class Input_Parser {
 		if (tailleH==5) {
 			res.append("Taille de l'entete (aucune option specifiée): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
 		}else if (tailleH>5){
-			res.append("\n Taille de l'entete avec option: "+tailleH*4+" \n");
+			res.append("Taille de l'entete avec option: "+tailleH*4+" \n");
 		}else {throw new RuntimeException("Taille de l'entete totalement invalide!");}
 		//Fin Analyse Taille et Debut Analyse TOS
 		res.append("TOS: Non Utilisé dans notre cadre: 0x"+in[1]+"\n");
