@@ -10,9 +10,21 @@ import java.util.List;
 import java.util.Map;
 
 
-
+/**
+ * Cette classe permet de parser un fichier txt de trame et d'analyser les differente entetes
+ * @author François-Xavier Drouard, Xia Alexandre 
+ */
 public class Input_Parser {
 	private Input_Parser(String fileName) {}
+	
+	/**
+	 * Permet de parse un fichier en tableau de String
+	 * @param fileName: le path du fichier
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 * @throws RuntimeException
+	 * @return Le tableau de String parser et filtrer
+	 */
 	public static String[][] parse(String fileName) throws IOException,FileNotFoundException, RuntimeException {//Lis le fichier
 		BufferedReader br = null;
 		StringBuilder res=new StringBuilder();
@@ -112,6 +124,11 @@ public class Input_Parser {
 		return res;
 	}*/
 	
+	/**
+	 * Permet de filtrer les retours chariots
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String sans retour chariot
+	 */
 	public static String[] backToSpace(String[] in) {
 		String[] res=in;
 		String tmp;
@@ -132,10 +149,20 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet de filtrer les espaces
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String sans espaces
+	 */
 	public static String[] split(String in) {
 		return in.split(" ");
 	}
 	
+	/**
+	 * Permet de filtrer les packet non hex
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String sans packet non hex
+	 */
 	public static String[] filterPacket(String[] in) {
 		String[] res=in;
 		String tmp;
@@ -156,6 +183,11 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet de filtrer les espaces
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String sans espaces
+	 */
 	public static String[][] filterAllSpace(String[] in) {
 		String[][] res= new String[in.length][];
 		String tmp;
@@ -167,6 +199,11 @@ public class Input_Parser {
 		
 	}
 	
+	/**
+	 * Permet de savoir si un string est un hexadecimal
+	 * @param s: le String a analyser
+	 * @return si le string est hex
+	 */
 	public static boolean isHex(String s) {
 		try {
 			Long.parseLong(s,16);
@@ -175,6 +212,11 @@ public class Input_Parser {
 			return false;
 		}
 	}
+	/**
+	 * Permet de filtrer 
+	 * @param in: le tableau a filtrer
+	 * @return 
+	 */
 	public static String[][] filterCall(String[] in){
 		//String[]tmp=splitOffSet(in);
 		String[]tmp=in;
@@ -188,7 +230,11 @@ public class Input_Parser {
 	}
 	
 	
-	
+	/**
+	 * Permet d'obtenir a partir d'un tableau total de trame, la partie Ethernet
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String de Ethernet
+	 */
 	public static String[] ethernetData(String[] in) {
 		String[] res= new String[14];
 		for (int i=0;i<14;i++) {
@@ -197,6 +243,11 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet d'analyser la partie Ethernet
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'analyse de Ethernet
+	 */
 	public static String ethernetToString(String[] in) throws RuntimeException{
 		if (in.length!=14) {throw new RuntimeException("Appel erron'e ethernetToString");}
 		StringBuilder res= new StringBuilder();
@@ -224,6 +275,11 @@ public class Input_Parser {
 		return res.toString();
 	}
 	
+	/**
+	 * Permet d'obtenir a partir d'un tableau total de trame, la partie IP header
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String de Ip Header
+	 */
 	public static String[] ipHData(String[] in) {
 		String[] res= new String[20];
 		int tmp=0;
@@ -234,6 +290,11 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet d'analyser le nombre d'option contenue dans IP
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'analyse du nombre d'option de IP
+	 */
 	public static int getIpOptTaille(String[] in) {
 		if (in.length!=20) {throw new RuntimeException("Appel erron'e getIpOptTaille");}
 		String tmp=in[0];
@@ -241,6 +302,11 @@ public class Input_Parser {
 		return tailleH*4-20;
 	}
 	
+	/**
+	 * Permet d'obtenir a partir d'un tableau total de trame, la partie Option de IP
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String de Option de IP
+	 */
 	public static String[] ipOptData(String[] in, int taille) {
 		String[] res= new String[taille];
 		int tmp=0;
@@ -251,6 +317,11 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet d'analyser la partie Option IP
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'analyse de Option IP
+	 */
 	public static String ipOptToString(String[] in,int taille) {
 		if (in.length!=taille) {throw new RuntimeException("Appel erron'e ipOptToString");}
 		String[] tab= {"End of Options List","No Operation","Security","Loose Source Route","Time Stamp","Extended Security","Commercial Security","Record Route","Stream ID","Strict Source Route","Experimental Measurement","MTU Probe","MTU Reply","Experimental Flow Control","Experimental Access Control","ENCODE","IMI Traffic Descriptor","Extended Internet Protocol","Traceroute","Address Extension","Router Alert","Selective Directed Broadcast","Unassigned (Released 18 October 2005)","Dynamic Packet State","Upstream Multicast Pkt.","Quick-Start","Unassigned","Unassigned","Unassigned","Unassigned","RFC3692-style Experiment"};
@@ -275,6 +346,11 @@ public class Input_Parser {
 		
 	}
 	
+	/**
+	 * Permet d'analyser la partie IP Header
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'analyse de IP Header
+	 */
 	public static String ipHToString(String[] in) throws RuntimeException{
 		if (in.length!=20) {throw new RuntimeException("Appel erron'e ipHToString");}
 		StringBuilder res= new StringBuilder();
@@ -411,7 +487,11 @@ public class Input_Parser {
 		return res.toString();
 	}
 	
-	
+	/**
+	 * Permet de get le nom du protocole
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return Le nom du protocole
+	 */
 	public static String protocolenameToString(String[] in ) {
 		if (in.length!=20) {throw new RuntimeException("Appel erron'e ipHToString");}
 		String tmp ="";
@@ -457,6 +537,11 @@ public class Input_Parser {
 		}else {return "Protocole Inconue";}
 	}
 	
+	/**
+	 * Permet d'obtenir a partir d'un tableau total de trame, la partie protocole
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String de protocole
+	 */
 	public static String[] protocoleHData(String [] in, int start ) {
 		String[] res= new String[8];
 		int tmp=0;
@@ -467,6 +552,11 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet de determiner l'octet de debut des protocole 
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'indice de l'octet de debut de protocole
+	 */
 	public static int protocoleHStartByIP(String [] in) {
 		if (in.length!=20) {throw new RuntimeException("Appel erron'e protocoleStartByIP");}
 		String tmp = in[0];
@@ -474,6 +564,11 @@ public class Input_Parser {
 		return 4*tailleH+14;
 	}
 	
+	/**
+	 * Permet d'analyser la partie UDP
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'analyse de UDP
+	 */
 	public static String protocoleHToString(String[] in) {
 		if (in.length!=8) {throw new RuntimeException("Appel erron'e protocoleToString");}
 		StringBuilder res= new StringBuilder();
@@ -494,12 +589,22 @@ public class Input_Parser {
 		return res.toString();
 	}
 	
+	/**
+	 * Permet de get la longueur de udp
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return La longueur de udp
+	 */
 	public static int udpLong(String [] in) {
 		if (in.length!=8) {throw new RuntimeException("Appel erron'e udpLong");}
 		String tmp = in[4]+in[5];
 		return Integer.parseInt(tmp,16);
 	}
 	
+	/**
+	 * Permet de get le nom DNS ou DHCP
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return Le nom de DNS ou DHCP
+	 */
 	public static String dNameToString(String[] in){
 		if (in.length!=8) {throw new RuntimeException("Appel erron'e protocoleToString");}
 		String tmp =in[0];
@@ -520,6 +625,11 @@ public class Input_Parser {
 		}else { return "DNS/DHCP non pr'esent";}}
 	}
 	
+	/**
+	 * Permet de determiner l'octet de debut des D 
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'indice de l'octet de debut de D
+	 */
 	public static int dStartByIP(String [] in) {
 		if (in.length!=20) {throw new RuntimeException("Appel erron'e dStartByIP");}
 		String tmp = in[0];
@@ -527,6 +637,11 @@ public class Input_Parser {
 		return 4*tailleH+14+8;
 	}
 	
+	/**
+	 * Permet d'obtenir a partir d'un tableau total de trame, la partie DHCP
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String de DHCP
+	 */
 	public static String [] dhcpData(String[] in, int start) {
 		String[] res=new String[Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))];
 		int tmp=0;
@@ -537,6 +652,11 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet d'analyser la partie DHCP
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'analyse de DHCP
+	 */
 	public static String dhcpToString(String[] in, int taille) {
 		if (in.length!=taille) {throw new RuntimeException("Appel erron'e dhcpToString");}
 		StringBuilder res= new StringBuilder();
@@ -773,6 +893,11 @@ public class Input_Parser {
 		
 	}
 	
+	/**
+	 * Permet d'analyser la partie DNS
+	 * @param in: le tableau sortie de data a filtrer
+	 * @return L'analyse de DNS
+	 */
 	public static String dnsToString(String[] in, int taille) {
 		if (in.length!=taille) {throw new RuntimeException("Appel erron'e dhcpToString");}
 		StringBuilder res=new StringBuilder();
@@ -2475,13 +2600,17 @@ public class Input_Parser {
 		
 		//System.out.println("End of Additional");
 		
-		
-		
-		
 		return res.toString();
 		
 	}
 	
+	/**
+	 * Permet de traiter la multiple compression DNS
+	 * @param in: le tableau a traiter
+	 * @param pt: pointeur actuel
+	 * @param map: la map contenant 
+	 * @return Le tableau de String de DNS
+	 */
 	private static String dnsRec(String[] in, int pt,Map<Integer,String> map) {
 		StringBuilder res = new StringBuilder();
 		if(in[pt].equals("00")) { 
@@ -2502,6 +2631,11 @@ public class Input_Parser {
 		
 	}
 	
+	/**
+	 * Permet d'obtenir a partir d'un tableau total de trame, la partie DNS
+	 * @param in: le tableau a filtrer
+	 * @return Le tableau de String de DNS
+	 */
 	public static String [] dnsData(String[] in, int start) {
 		String[] res=new String[Input_Parser.udpLong(Input_Parser.protocoleHData(in, Input_Parser.protocoleHStartByIP(Input_Parser.ipHData(in))))];
 		int tmp=0;
@@ -2512,6 +2646,11 @@ public class Input_Parser {
 		return res;
 	}
 	
+	/**
+	 * Permet d'obtenir a partir d'un hex le binaire
+	 * @param hex: l'hex
+	 * @return le binaire en String
+	 */
 	public static String hexToBin(String hex){
 	    String bin = "";
 	    String binFragment = "";

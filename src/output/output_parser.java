@@ -5,8 +5,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Cette classe permet d'ecrire un String dans un txt | version Personnel V0.9
+ * @author François-Xavier Drouard 
+ */
 public class output_parser {
-
+	/**
+	 * Permet d'écrire dans un fichier un string
+	 * @param path: le path
+	 * @param txt: Le String
+	 * @throws IOException
+	 * @return Le path du fichier ecrit!
+	 */
 	public static String writer(String path, String txt) throws IOException {
 		String pathok = path.split(".txt")[0];
 		try {

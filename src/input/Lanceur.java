@@ -2,6 +2,10 @@ package input;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * Cette classe permet de controller Input_Parser
+ * @author François-Xavier Drouard, Xia Alexandre 
+ */
 public class Lanceur {
 	private final String[][] datas;
 	private String [] select;
