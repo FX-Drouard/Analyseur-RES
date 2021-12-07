@@ -2095,6 +2095,7 @@ public class Input_Parser {
 					if (res3.toString().charAt(res3.toString().length()-1)=='.') {
 						res3.deleteCharAt(res3.length()-1);
 					}
+					
 					res.append("        NS : "+res3.toString()+"\n");
 				}else if (type==15) {
 					int ipc=0;
@@ -2703,7 +2704,7 @@ public class Input_Parser {
 				return res.toString();
 			}else {
 				if(map.containsKey(pt)) {
-					res.append(map.get(pt)+dnsRec(in,1+pt+Integer.parseInt(in[pt],16),map));
+					res.append(map.get(pt)+"."+dnsRec(in,1+pt+Integer.parseInt(in[pt],16),map));
 					return res.toString();
 				}else {
 					//We try to get an inexisting value
