@@ -7,13 +7,18 @@ import java.io.IOException;
  * @author François-Xavier Drouard, Xia Alexandre 
  */
 public class Lanceur {
+	
 	private final String[][] datas;
+	
 	private String [] select;
+	
 	private int actuel;
+	
 	public Lanceur(String path) throws IOException,FileNotFoundException {
 		this.datas=Input_Parser.parse(path);
 		this.setectData(0);
 	}
+	
 	public void setectData(int choix) throws RuntimeException {
 		if(choix< datas.length && choix>=0) {
 			select=datas[choix];
@@ -23,6 +28,7 @@ public class Lanceur {
 		}
 		
 	}
+	
 	public String ethernetToString() {
 		try {
 			return Input_Parser.ethernetToString(Input_Parser.ethernetData(select));
@@ -32,6 +38,7 @@ public class Lanceur {
 			return "Ethernet Error parsing";
 		}
 	}
+	
 	public String ipHToString() {
 		try {
 			StringBuilder res=new StringBuilder().append(Input_Parser.ipHToString(Input_Parser.ipHData(select)));
@@ -49,6 +56,7 @@ public class Lanceur {
 			return "IP Error Parsing";
 		}
 	}
+	
 	public String brutToString() {
 		String res ="";
 		for (int i = 0;i<select.length;i++) {
@@ -110,6 +118,7 @@ public class Lanceur {
 		
 		return datas.length;
 	}
+	
 	public int getActuel() {
 		return actuel;
 	}
