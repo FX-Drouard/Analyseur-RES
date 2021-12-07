@@ -1095,7 +1095,12 @@ public class Input_Parser {
 						if((in[pointer].substring(0,2).equals("11"))) {
 							int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 							//Start the recusive method
-							res3.append(dnsRec(in,pt,map));
+							try {
+								String st=dnsRec(in,pt,map);
+								res3.append(st);
+							}catch(StackOverflowError e) {
+								res3.append(" Could not read the name in the RDATA");
+							}
 							nbmots+=1;
 							colen+=Integer.parseInt(in[pointer],16);
 							pointer+=2;
@@ -1217,7 +1222,6 @@ public class Input_Parser {
 		//Answer Part
 		if(rep >0) res.append("\nAnswer: \n");
 		for (int j=0;j<rep;j++) {
-			System.out.println(" j "+j);
 			res3=new StringBuilder();
 			int totlength=0;//total length of one anwser
 			int nbmots=0;//number of words in one answer
@@ -1250,7 +1254,12 @@ public class Input_Parser {
 							int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 
 							//Start the recusive method
-							res3.append(dnsRec(in,pt,map));
+							try {
+								String st=dnsRec(in,pt,map);
+								res3.append(st);
+							}catch(StackOverflowError e) {
+								res3.append("   Could not read name in RDATA");
+							}
 							nbmots+=1;
 							colen+=Integer.parseInt(in[pointer],16);
 							pointer+=2;
@@ -1270,7 +1279,6 @@ public class Input_Parser {
 						}
 						colen+=Integer.parseInt(in[pointer],16);
 						pointer+=(1+Integer.parseInt(in[pointer],16));
-						System.out.println("res "+res3.toString());
 						
 						
 						
@@ -1458,7 +1466,12 @@ public class Input_Parser {
 									
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
-									res3.append(dnsRec(in,pt,map));
+									try {
+										String st=dnsRec(in,pt,map);
+										res3.append(st);
+									}catch(StackOverflowError e) {
+										res3.append("   Could not read name in RDATA");
+									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
 									continue;
@@ -1539,7 +1552,11 @@ public class Input_Parser {
 								if((in[pointer].substring(0,2).equals("11"))) {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
-									res3.append(dnsRec(in,pt,map));
+									try {
+										res3.append(dnsRec(in,pt,map));
+									}catch(Exception e) {
+										return res.toString()+" name in rdata";
+									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
 									continue;
@@ -1594,6 +1611,9 @@ public class Input_Parser {
 					res.append("        NS : "+res3.toString()+"\n");
 				}else if (type==15) {
 					int ipc=0;
+					res.append("        Preference : ("+(Integer.parseInt(in[i]+in[i+1],16))+")\n");
+					i+=2;
+					ipc+=2;
 					while (ipc<rdlength) {
 						boolean isC=false;
 						tmp = Input_Parser.hexToBin(in[i]);
@@ -1616,7 +1636,12 @@ public class Input_Parser {
 									
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
-									res3.append(dnsRec(in,pt,map));
+									try {
+										String st=dnsRec(in,pt,map);
+										res3.append(st);
+									}catch(StackOverflowError e) {
+										res3.append("   Could not read name in RDATA");
+									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
 									continue;
@@ -1671,6 +1696,7 @@ public class Input_Parser {
 				}else {
 					i+=rdlength;
 				}
+				res3=new StringBuilder();
 				
 				
 			}catch(Exception e) {
@@ -1678,7 +1704,7 @@ public class Input_Parser {
 			}
 		}
 		
-		System.out.println("Fin des r'eponses");
+		//System.out.println("Fin des r'eponses");
 		//System.out.println(" "+res.toString());
 
 		
@@ -1720,7 +1746,12 @@ public class Input_Parser {
 							int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 
 							//Start the recusive method
-							res3.append(dnsRec(in,pt,map));
+							try {
+								String st=dnsRec(in,pt,map);
+								res3.append(st);
+							}catch(StackOverflowError e) {
+								res3.append("   Could not read name in RDATA");
+							}
 							nbmots+=1;
 							colen+=Integer.parseInt(in[pointer],16);
 							pointer+=2;
@@ -1925,7 +1956,12 @@ public class Input_Parser {
 									
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
-									res3.append(dnsRec(in,pt,map));
+									try {
+										String st=dnsRec(in,pt,map);
+										res3.append(st);
+									}catch(StackOverflowError e) {
+										res3.append("   Could not read name in RDATA");
+									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
 									continue;
@@ -2003,7 +2039,12 @@ public class Input_Parser {
 								if((in[pointer].substring(0,2).equals("11"))) {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
-									res3.append(dnsRec(in,pt,map));
+									try {
+										String st=dnsRec(in,pt,map);
+										res3.append(st);
+									}catch(StackOverflowError e) {
+										res3.append("   Could not read name in RDATA");
+									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
 									continue;
@@ -2057,6 +2098,9 @@ public class Input_Parser {
 					res.append("        NS : "+res3.toString()+"\n");
 				}else if (type==15) {
 					int ipc=0;
+					res.append("        Preference : ("+(Integer.parseInt(in[i]+in[i+1],16))+")\n");
+					i+=2;
+					ipc+=2;
 					while (ipc<rdlength) {
 						boolean isC=false;
 						tmp = Input_Parser.hexToBin(in[i]);
@@ -2079,7 +2123,12 @@ public class Input_Parser {
 									
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
-									res3.append(dnsRec(in,pt,map));
+									try {
+										String st=dnsRec(in,pt,map);
+										res3.append(st);
+									}catch(StackOverflowError e) {
+										res3.append("   Could not read name in RDATA");
+									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
 									continue;
@@ -2183,7 +2232,12 @@ public class Input_Parser {
 								int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 
 								//Start the recusive method
-								res3.append(dnsRec(in,pt,map));
+								try {
+									String st=dnsRec(in,pt,map);
+									res3.append(st);
+								}catch(StackOverflowError e) {
+									res3.append("   Could not read name in RDATA");
+								}
 								nbmots+=1;
 								colen+=Integer.parseInt(in[pointer],16);
 								pointer+=2;
@@ -2388,7 +2442,12 @@ public class Input_Parser {
 										
 										int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 										//Start the recusive method
-										res3.append(dnsRec(in,pt,map));
+										try {
+											String st=dnsRec(in,pt,map);
+											res3.append(st);
+										}catch(StackOverflowError e) {
+											res3.append("   Could not read name in RDATA");
+										}
 										tmp= hexToBin(in[i]);
 										pointer+=2;
 										continue;
@@ -2466,7 +2525,12 @@ public class Input_Parser {
 									if((in[pointer].substring(0,2).equals("11"))) {
 										int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 										//Start the recusive method
-										res3.append(dnsRec(in,pt,map));
+										try {
+											String st=dnsRec(in,pt,map);
+											res3.append(st);
+										}catch(StackOverflowError e) {
+											res3.append("   Could not read name in RDATA");
+										}
 										tmp= hexToBin(in[i]);
 										pointer+=2;
 										continue;
@@ -2520,6 +2584,9 @@ public class Input_Parser {
 						res.append("        NS : "+res3.toString()+"\n");
 					}else if (type==15) {
 						int ipc=0;
+						res.append("        Preference : ("+(Integer.parseInt(in[i]+in[i+1],16))+")\n");
+						i+=2;
+						ipc+=2;
 						while (ipc<rdlength) {
 							boolean isC=false;
 							tmp = Input_Parser.hexToBin(in[i]);
@@ -2542,7 +2609,12 @@ public class Input_Parser {
 										
 										int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 										//Start the recusive method
-										res3.append(dnsRec(in,pt,map));
+										try {
+											String st=dnsRec(in,pt,map);
+											res3.append(st);
+										}catch(StackOverflowError e) {
+											res3.append("   Could not read name in RDATA");
+										}
 										tmp= hexToBin(in[i]);
 										pointer+=2;
 										continue;
@@ -2622,24 +2694,23 @@ public class Input_Parser {
 	 */
 	private static String dnsRec(String[] in, int pt,Map<Integer,String> map) {
 		StringBuilder res = new StringBuilder();
-		if(in[pt].equals("00")) { 
-			return "";
-		}else if(hexToBin(in[pt]).substring(0,2).equals("11")) {
-			int pt2=Integer.parseInt(hexToBin(in[pt]).substring(2)+hexToBin(in[pt+1]),2);
-			res.append(dnsRec(in,pt2,map)+"."+dnsRec(in,pt+2,map));
-
-			return res.toString();
-		}else {
-			if(map.containsKey(pt)) {
-				System.out.println(" val "+in[pt+Integer.parseInt(in[pt],16)]+in[1+pt+Integer.parseInt(in[pt],16)]+in[pt+Integer.parseInt(in[pt],16)+2]);
-				res.append(map.get(pt)+dnsRec(in,pt+Integer.parseInt(in[pt],16),map));
+			if(in[pt].equals("00")) { 
+				return "";
+			}else if(hexToBin(in[pt]).substring(0,2).equals("11")) {
+				int pt2=Integer.parseInt((hexToBin(in[pt]).substring(2)+hexToBin(in[pt+1])),2);
+				res.append(dnsRec(in,pt2,map)+"."+dnsRec(in,pt+2,map));
+	
 				return res.toString();
 			}else {
-				//We try to get an inexisting value
-				
-				return "Invalid";
+				if(map.containsKey(pt)) {
+					res.append(map.get(pt)+dnsRec(in,1+pt+Integer.parseInt(in[pt],16),map));
+					return res.toString();
+				}else {
+					//We try to get an inexisting value
+					
+					return "Invalid";
+				}
 			}
-		}
 		
 	}
 	
