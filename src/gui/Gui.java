@@ -28,7 +28,7 @@ import java.awt.Font;
 
 /**
  * Cette classe permet de cree des interfaces plus poussee que son homologue "Question" | Version V1.0.2
- * @author Franeois-Xavier Drouard  
+ * @author François-Xavier Drouard  
  */
 public class Gui {
 
