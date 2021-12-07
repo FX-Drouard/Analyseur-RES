@@ -1096,10 +1096,11 @@ public class Input_Parser {
 							int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 							//Start the recusive method
 							res3.append(dnsRec(in,pt,map));
-							i+=2;
-							tmp= hexToBin(in[i]);
+							nbmots+=1;
+							colen+=Integer.parseInt(in[pointer],16);
 							pointer+=(1+Integer.parseInt(in[pointer],16));
 							continue;
+							
 							
 						}
 						
@@ -2609,7 +2610,7 @@ public class Input_Parser {
 	 * @param in: le tableau a traiter
 	 * @param pt: pointeur actuel
 	 * @param map: la map contenant 
-	 * @return Le tableau de String de DNS
+	 * @return Le String de DNS
 	 */
 	private static String dnsRec(String[] in, int pt,Map<Integer,String> map) {
 		StringBuilder res = new StringBuilder();
@@ -2617,7 +2618,7 @@ public class Input_Parser {
 			return "";
 		}else if(in[pt].substring(0,2).equals("11")) {
 			int pt2=Integer.parseInt(in[pt].substring(2)+hexToBin(in[pt]));
-			res.append(dnsRec(in,pt2,map)+"."+dnsRec(in,pt+3,map));
+			res.append(dnsRec(in,pt2,map)+"."+dnsRec(in,pt+2,map));
 			return res.toString();
 		}else {
 			if(map.containsKey(pt)) {
