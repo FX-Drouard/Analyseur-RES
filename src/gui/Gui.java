@@ -44,8 +44,8 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple8.txt");
-					String path = "data/allbutnoAddi.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
+					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple8.txt");
+					//String path = "data/exemple8.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					try{
 						la=new Lanceur(path);
 						Gui window = new Gui(path);
@@ -159,7 +159,7 @@ public class Gui {
 			public void actionPerformed(ActionEvent e) {
 				int a=choice.getSelectedIndex();
 				la.setectData(a);
-				//try {
+				try {
 					IP.setText(la.ipHToString());
 					Ethernet.setText(la.ethernetToString());
 					Brut.setText(la.brutToString());
@@ -173,11 +173,11 @@ public class Gui {
 						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
 					}
 					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
-					Question.info("Trame: "+(a+1)+" Chargée avec succes!");//}
-				/*catch (Exception e1) {
+					Question.info("Trame: "+(a+1)+" Chargée avec succes!");}
+				catch (Exception e1) {
 					Question.warn("La trame selectionnee a un taux d'invalidité superieur au maximum toléré, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
-					System.out.println(e1.getMessage());
-				}*/
+					//System.out.println(e1.getMessage());
+				}
 			}
 		});
 		Trame.add(bouton);
@@ -225,7 +225,7 @@ public class Gui {
 		sl_Trame.putConstraint(SpringLayout.EAST, credits, 0, SpringLayout.EAST, choice);
 		Trame.add(credits);
 		
-		JLabel lblNewLabel = new JLabel("Bienvenue sur L'analyseur r\u00E9seau de Xia et Drouard");
+		JLabel lblNewLabel = new JLabel("Bienvenue sur L'analyseur réseau de Xia et Drouard");
 		sl_Trame.putConstraint(SpringLayout.NORTH, lblNewLabel, 88, SpringLayout.NORTH, Trame);
 		sl_Trame.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, printer);
 		sl_Trame.putConstraint(SpringLayout.EAST, lblNewLabel, 0, SpringLayout.EAST, bouton);

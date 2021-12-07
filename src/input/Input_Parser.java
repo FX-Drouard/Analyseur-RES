@@ -939,7 +939,7 @@ public class Input_Parser {
 		Map<Integer,String> map=new HashMap<Integer,String>();
 		
 		
-		res.append("Queries: \n");
+		res.append("\nQueries: \n");
 		for (int j=0;j<question;j++) {
 			
 			int totlength=0;//total length of one question
@@ -1089,7 +1089,7 @@ public class Input_Parser {
 		
 		
 		//Answer Part
-		if(rep >0) res.append("\nAnswer: \n\n");
+		if(rep >0) res.append("\nAnswer: \n");
 		for (int j=0;j<rep;j++) {
 			res3=new StringBuilder();
 			int totlength=0;//total length of one anwser
@@ -1552,7 +1552,7 @@ public class Input_Parser {
 		
 		//Authoritative Part
 		
-		if(arr >0) res.append("\nAuthority records: \n\n");
+		if(arr >0) res.append("\nAuthority records: \n");
 		for (int j=0;j<arr;j++) {
 			res3=new StringBuilder();
 			int totlength=0;//taille total du name de 1 question
@@ -2015,7 +2015,7 @@ public class Input_Parser {
 		//START OF ADDITIONAL PART
 		
 		try {
-			if(addrr >0) res.append("\nAdditional Records: \n\n");
+			if(addrr >0) res.append("\nAdditional Records:\n");
 			for (int j=0;j<addrr;j++) {
 				res3=new StringBuilder();
 				int totlength=0;//taille total du name de 1 question
