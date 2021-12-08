@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * Cette classe permet de parser un fichier txt de trame et d'analyser les differente entetes
- * @author François-Xavier Drouard, Xia Alexandre 
+ * @author FranÃ§ois-Xavier Drouard, Xia Alexandre 
  */
 public class Input_Parser {
 	private Input_Parser(String fileName) {}
@@ -1258,7 +1258,7 @@ public class Input_Parser {
 								String st=dnsRec(in,pt,map);
 								res3.append(st);
 							}catch(StackOverflowError e) {
-								res3.append("   Could not read name in RDATA");
+								res3.append("   (not 100% accurate)");
 							}
 							nbmots+=1;
 							colen+=Integer.parseInt(in[pointer],16);
@@ -1470,7 +1470,7 @@ public class Input_Parser {
 										String st=dnsRec(in,pt,map);
 										res3.append(st);
 									}catch(StackOverflowError e) {
-										res3.append("   Could not read name in RDATA");
+										res3.append("   (not 100% accurate)");
 									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
@@ -1640,7 +1640,7 @@ public class Input_Parser {
 										String st=dnsRec(in,pt,map);
 										res3.append(st);
 									}catch(StackOverflowError e) {
-										res3.append("   Could not read name in RDATA");
+										res3.append("   (not 100% accurate)");
 									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
@@ -1750,7 +1750,7 @@ public class Input_Parser {
 								String st=dnsRec(in,pt,map);
 								res3.append(st);
 							}catch(StackOverflowError e) {
-								res3.append("   Could not read name in RDATA");
+								res3.append("   (not 100% accurate)");
 							}
 							nbmots+=1;
 							colen+=Integer.parseInt(in[pointer],16);
@@ -1960,7 +1960,7 @@ public class Input_Parser {
 										String st=dnsRec(in,pt,map);
 										res3.append(st);
 									}catch(StackOverflowError e) {
-										res3.append("   Could not read name in RDATA");
+										res3.append("   (not 100% accurate)");
 									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
@@ -2043,7 +2043,7 @@ public class Input_Parser {
 										String st=dnsRec(in,pt,map);
 										res3.append(st);
 									}catch(StackOverflowError e) {
-										res3.append("   Could not read name in RDATA");
+										res3.append("   (not 100% accurate)");
 									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
@@ -2128,7 +2128,7 @@ public class Input_Parser {
 										String st=dnsRec(in,pt,map);
 										res3.append(st);
 									}catch(StackOverflowError e) {
-										res3.append("   Could not read name in RDATA");
+										res3.append("   (not 100% accurate)");
 									}
 									tmp= hexToBin(in[i]);
 									pointer+=2;
@@ -2237,7 +2237,7 @@ public class Input_Parser {
 									String st=dnsRec(in,pt,map);
 									res3.append(st);
 								}catch(StackOverflowError e) {
-									res3.append("   Could not read name in RDATA");
+									res3.append("   (not 100% accurate)");
 								}
 								nbmots+=1;
 								colen+=Integer.parseInt(in[pointer],16);
@@ -2447,7 +2447,7 @@ public class Input_Parser {
 											String st=dnsRec(in,pt,map);
 											res3.append(st);
 										}catch(StackOverflowError e) {
-											res3.append("   Could not read name in RDATA");
+											res3.append("   (not 100% accurate)");
 										}
 										tmp= hexToBin(in[i]);
 										pointer+=2;
@@ -2530,7 +2530,7 @@ public class Input_Parser {
 											String st=dnsRec(in,pt,map);
 											res3.append(st);
 										}catch(StackOverflowError e) {
-											res3.append("   Could not read name in RDATA");
+											res3.append("   (not 100% accurate)");
 										}
 										tmp= hexToBin(in[i]);
 										pointer+=2;
@@ -2614,7 +2614,7 @@ public class Input_Parser {
 											String st=dnsRec(in,pt,map);
 											res3.append(st);
 										}catch(StackOverflowError e) {
-											res3.append("   Could not read name in RDATA");
+											res3.append("   (not 100% accurate)");
 										}
 										tmp= hexToBin(in[i]);
 										pointer+=2;
