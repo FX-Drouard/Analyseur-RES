@@ -27,7 +27,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 
 /**
- * Cette classe permet de cree des interfaces plus poussee que son homologue "Question" | Version V1.0.2
+ * Cette classe permet de crée des interfaces plus poussée que son homologue "Question" | Version V1.0.2
  * @author François-Xavier Drouard  
  */
 public class Gui {
@@ -37,7 +37,7 @@ public class Gui {
 	private static int val=0;
 
 	/**
-	 * Lance La fenetre et Appel Lanceur de Input et demande avant le path du fichier a analyse.
+	 * Lance La fenetre et Appel Lanceur de Input et demande avant le path du fichier à analyser.
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
@@ -81,7 +81,7 @@ public class Gui {
 	}
 
 	/**
-	 * Gere la fenetre , ecrit dans les differente section et change dynamiquement de trame.
+	 * Gère la fenetre écrite dans les differentes sections et changent dynamiquement les trames.
 	 * @param path Le path du fichier
 	 */
 	private void initialize(String path) {

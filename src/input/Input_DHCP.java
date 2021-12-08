@@ -3,7 +3,7 @@ package input;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cette classe permet de Recupérer les option DHCP
+ * Cette classe permet de Recupérer les options DHCP
  * @author François-Xavier Drouard, Xia Alexandre 
  */
 public class Input_DHCP {
@@ -16,7 +16,7 @@ public class Input_DHCP {
 	  */
 	private static final String[] hardwaret= {"Unknown","Ethernet","Experimental Ethernet","Amateur Radio AX.25","Proteon ProNET Token Ring","Chaos","IEEE 802","ARCNET","Hyperchannel","Lanstar","Autonet Short Address","LocalTalk","LocalNet (IBM PCNet or SYTEK LocalNET)","Ultra link","SMDS","Frame Relay","ATM, Asynchronous Transmission Mode","HDLC","Fibre Channel","ATM, Asynchronous Transmission Mode","Serial Line","ATM, Asynchronous Transmission Mode","MIL-STD-188-220","Metricom","IEEE 1394.1995","MAPOS","Twinaxial","EUI-64","HIPARP","IP and ARP over ISO 7816-3","ARPSec","IPsec tunnel","Infiniband","CAI, TIA-102 Project 25 Common Air Interface","Wiegand Interface","Pure IP"};
 	/**
-	 * Permet de get l'option par rapport a son numéro
+	 * Permet d'obtenir l'option par rapport à son numéro
 	 * @param val: Le numero de l'option
 	 * @return L'option en String
 	 */
@@ -25,7 +25,7 @@ public class Input_DHCP {
 	}
 	
 	/**
-	 * Permet de get le type Hardware par rapport a son numéro
+	 * Permet d'obtenir le type Hardware par rapport a son numéro
 	 * @param val: Le numero du type
 	 * @return Le type hardware en String
 	 */
@@ -34,8 +34,8 @@ public class Input_DHCP {
 	}
 	
 	/**
-	 * Permet transformer un Hex en Ascii
-	 * @param hexstr le ASCII encoder en hex
+	 * Permet de transformer un Hex en Ascii
+	 * @param hexstr le ASCII encodé en hex
 	 * @return Le String ASCII
 	 */
 	public static String hexToAscii(String hexStr) {
@@ -50,15 +50,15 @@ public class Input_DHCP {
 	}
 	
 	/**
-	 * Permet donner le tableau total des types
-	 * @return le tableau de type
+	 * Permet de donner le tableau total des types
+	 * @return le tableau de types
 	 */
 	public static String[] getTab() {
 		return tab;
 	}
 	
 	/**
-	 * Permet transformer les seconde en jours
+	 * Permet de transformer les secondes en jours
 	 * @param sec les secondes en int
 	 * @return Le nombre de jour en int
 	 */
