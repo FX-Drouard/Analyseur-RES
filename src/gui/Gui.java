@@ -25,6 +25,8 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import java.awt.Font;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
 
 /**
  * Cette classe permet de crée des interfaces plus poussée que son homologue "Question" | Version V1.0.2
@@ -44,8 +46,8 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple8.txt");
-					//String path = "data/allbutnoAddi.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
+					//String path=Question.getrep("Donnez le Path du TXT (si rien n'est donnee alors un txt de demo sera charge)", "./data/exemple8.txt");
+					String path = "data/exemple6.txt"; //en mode editeur activer ce path pour eviter le crash parser gui
 					try{
 						la=new Lanceur(path);
 						Gui window = new Gui(path);
@@ -99,15 +101,27 @@ public class Gui {
 		SpringLayout sl_Trame = new SpringLayout();
 		Trame.setLayout(sl_Trame);
 		
-		Choice choice = new Choice();
-		sl_Trame.putConstraint(SpringLayout.NORTH, choice, 207, SpringLayout.NORTH, Trame);
-		sl_Trame.putConstraint(SpringLayout.WEST, choice, 356, SpringLayout.WEST, Trame);
-		sl_Trame.putConstraint(SpringLayout.SOUTH, choice, -222, SpringLayout.SOUTH, Trame);
-		sl_Trame.putConstraint(SpringLayout.EAST, choice, -393, SpringLayout.EAST, Trame);
+		/*Choice choice = new Choice();
+		sl_Trame.putConstraint(SpringLayout.NORTH, choice, 158, SpringLayout.NORTH, Trame);
+		sl_Trame.putConstraint(SpringLayout.WEST, choice, 37, SpringLayout.WEST, Trame);
+		sl_Trame.putConstraint(SpringLayout.SOUTH, choice, -271, SpringLayout.SOUTH, Trame);
+		sl_Trame.putConstraint(SpringLayout.EAST, choice, -712, SpringLayout.EAST, Trame);
 		for (int i=0;i<la.nbChoix();i++) {
 			choice.add("Trame: "+(i+1));
 		}
-		Trame.add(choice);
+		Trame.add(choice);*/
+		
+		String [] choix= new String[la.nbChoix()+1];
+		choix[0]="Non choisie";
+		for (int i=1;i<la.nbChoix()+1;i++) {
+			choix[i]="Trame N°"+(i);
+		}
+		
+		JComboBox<String> comboBox = new JComboBox<>(choix);
+		//JComboBox comboBox = new JComboBox();
+		sl_Trame.putConstraint(SpringLayout.EAST, comboBox, -359, SpringLayout.EAST, Trame);
+		((JLabel)comboBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		Trame.add(comboBox);
 		
 		JScrollPane bigBrut = new JScrollPane();
 		tabbedPane.addTab("Brut", null, bigBrut, null);
@@ -149,43 +163,37 @@ public class Gui {
 		lesD.setText("Veuillez Charger la Trame de votre choix dans \"Choix de la Trame\"");
 		lesD.setEditable(false);
 		
-		Button bouton = new Button("Valider");
-		bouton.setForeground(new Color(255, 255, 255));
-		bouton.setBackground(new Color(0, 128, 0));
-		sl_Trame.putConstraint(SpringLayout.NORTH, bouton, 0, SpringLayout.NORTH, choice);
-		sl_Trame.putConstraint(SpringLayout.WEST, bouton, 27, SpringLayout.EAST, choice);
-		sl_Trame.putConstraint(SpringLayout.EAST, bouton, -243, SpringLayout.EAST, Trame);
-		bouton.addActionListener(new ActionListener() {
+		Button credits = new Button("Credits");
+		sl_Trame.putConstraint(SpringLayout.NORTH, credits, 44, SpringLayout.SOUTH, comboBox);
+		sl_Trame.putConstraint(SpringLayout.WEST, credits, 344, SpringLayout.WEST, Trame);
+		sl_Trame.putConstraint(SpringLayout.EAST, credits, -399, SpringLayout.EAST, Trame);
+		credits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int a=choice.getSelectedIndex();
-				la.setectData(a);
-				try {
-					IP.setText(la.ipHToString());
-					Ethernet.setText(la.ethernetToString());
-					Brut.setText(la.brutToString());
-					Protocole.setText(la.protocoleToString());
-					tabbedPane.setTitleAt(4,la.protocolNameToString());
-					if (la.protocolNameToString().equals("UDP")) {
-						tabbedPane.setTitleAt(5,la.dNameToString());
-						lesD.setText(la.dToString());
-					}else {
-						tabbedPane.setTitleAt(5,"DNS/DCHP non present");
-						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
-					}
-					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
-					Question.info("Trame: "+(a+1)+" Chargée avec succes!");}
-				catch (Exception e1) {
-					Question.warn("La trame selectionnee a un taux d'invalidité superieur au maximum toléré, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
-					//System.out.println(e1.getMessage());
-				}
+				Question.info("Ce programme a été codé par:\n Xia Alexandre 28604113 \n et\n Drouard François-Xavier 3800028\n Pour Sorbonne Science UE LU3IN033 2021-2022");
 			}
 		});
-		Trame.add(bouton);
+		Trame.add(credits);
 		
-		Button printer = new Button("Analyse to file");
-		printer.addActionListener(new ActionListener() {
+		JLabel lblNewLabel = new JLabel("Bienvenue sur L'analyseur réseau de Drouard et Xia ");
+		sl_Trame.putConstraint(SpringLayout.NORTH, comboBox, 97, SpringLayout.SOUTH, lblNewLabel);
+		sl_Trame.putConstraint(SpringLayout.NORTH, lblNewLabel, 90, SpringLayout.NORTH, Trame);
+		sl_Trame.putConstraint(SpringLayout.WEST, lblNewLabel, 199, SpringLayout.WEST, Trame);
+		sl_Trame.putConstraint(SpringLayout.EAST, lblNewLabel, -197, SpringLayout.EAST, Trame);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		Trame.add(lblNewLabel);
+		
+		JButton bprinter = new JButton("Analyse to file");
+		sl_Trame.putConstraint(SpringLayout.NORTH, bprinter, 97, SpringLayout.SOUTH, lblNewLabel);
+		sl_Trame.putConstraint(SpringLayout.WEST, comboBox, 28, SpringLayout.EAST, bprinter);
+		sl_Trame.putConstraint(SpringLayout.EAST, bprinter, -567, SpringLayout.EAST, Trame);
+		sl_Trame.putConstraint(SpringLayout.WEST, bprinter, 142, SpringLayout.WEST, Trame);
+		bprinter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int a=choice.getSelectedIndex();
+				int a=comboBox.getSelectedIndex()-1;
+				if (a==-1) {
+					Question.info("Veuillez Choisir une trame dans le selecteur avant de cliquer sur Valider");
+					return;
+				}
 				int b=la.getActuel();
 				la.setectData(a);
 				String pathi=Question.getrep("Mettez le path exacte du fichier a ecrire (par defaut nous ecrirons dans ./reseau_3800028_28604113_Trame_"+(a+1)+".txt)", "./reseau_3800028_28604113_Trame_"+(a+1)+".txt");
@@ -207,29 +215,43 @@ public class Gui {
 				la.setectData(b);
 			}
 		});
-		printer.setBackground(SystemColor.activeCaption);
-		sl_Trame.putConstraint(SpringLayout.NORTH, printer, 0, SpringLayout.NORTH, choice);
-		sl_Trame.putConstraint(SpringLayout.WEST, printer, -412, SpringLayout.EAST, bouton);
-		sl_Trame.putConstraint(SpringLayout.SOUTH, printer, 0, SpringLayout.SOUTH, bouton);
-		sl_Trame.putConstraint(SpringLayout.EAST, printer, -26, SpringLayout.WEST, choice);
-		Trame.add(printer);
+		bprinter.setBackground(UIManager.getColor("ToolTip.background"));
+		Trame.add(bprinter);
 		
-		Button credits = new Button("Credits");
-		credits.addActionListener(new ActionListener() {
+		JButton bvalide = new JButton("Valider");
+		sl_Trame.putConstraint(SpringLayout.NORTH, bvalide, 97, SpringLayout.SOUTH, lblNewLabel);
+		sl_Trame.putConstraint(SpringLayout.WEST, bvalide, 30, SpringLayout.EAST, comboBox);
+		sl_Trame.putConstraint(SpringLayout.EAST, bvalide, -182, SpringLayout.EAST, Trame);
+		bvalide.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Question.info("Ce programme a été codé par:\n Xia Alexandre 28604113 \n et\n Drouard François-Xavier 3800028\n Pour Sorbonne Science UE LU3IN033 2021-2022");
-			}
-		});
-		sl_Trame.putConstraint(SpringLayout.NORTH, credits, 45, SpringLayout.SOUTH, choice);
-		sl_Trame.putConstraint(SpringLayout.WEST, credits, 0, SpringLayout.WEST, choice);
-		sl_Trame.putConstraint(SpringLayout.EAST, credits, 0, SpringLayout.EAST, choice);
-		Trame.add(credits);
+				int a=comboBox.getSelectedIndex()-1;
+				if (a==-1) {
+					Question.info("Veuillez Choisir une trame dans le selecteur avant de cliquer sur Valider");
+					return;
+				}
+				la.setectData(a);
+				try {
+					IP.setText(la.ipHToString());
+					Ethernet.setText(la.ethernetToString());
+					Brut.setText(la.brutToString());
+					Protocole.setText(la.protocoleToString());
+					tabbedPane.setTitleAt(4,la.protocolNameToString());
+					if (la.protocolNameToString().equals("UDP")) {
+						tabbedPane.setTitleAt(5,la.dNameToString());
+						lesD.setText(la.dToString());
+					}else {
+						tabbedPane.setTitleAt(5,"DNS/DCHP non present");
+						lesD.setText("En "+la.protocolNameToString()+" Il n'y a pas de DNS ou DHCP!");
+					}
+					frmAnalyserReseau.setTitle("Analyseur Reseau ("+path+")  Trame N°:"+(la.getActuel()+1));
+					Question.info("Trame: "+(a+1)+" Chargée avec succes!");}
+				catch (Exception e1) {
+					Question.warn("La trame selectionnee a un taux d'invalidité superieur au maximum toléré, analyse impossible.\n Merci de selectionner une autre trame ou de vous referer au readme pour avoir les indications de mise en forme de la trame !");
+					//System.out.println(e1.getMessage());
+				}}});
+		bvalide.setBackground(UIManager.getColor("Tree.selectionBackground"));
+		Trame.add(bvalide);
 		
-		JLabel lblNewLabel = new JLabel("Bienvenue sur L'analyseur réseau de Xia et Drouard");
-		sl_Trame.putConstraint(SpringLayout.NORTH, lblNewLabel, 88, SpringLayout.NORTH, Trame);
-		sl_Trame.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, printer);
-		sl_Trame.putConstraint(SpringLayout.EAST, lblNewLabel, 0, SpringLayout.EAST, bouton);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		Trame.add(lblNewLabel);
+		
 	}
 }

@@ -334,17 +334,63 @@ public class Input_Parser {
 			}
 			String hex=in[i];
 			String bin=Input_Parser.hexToBin(hex);
+			
 			int type=Integer.parseInt(bin.substring(3),2);
-			int taillopt=Integer.parseInt(in[i+1],16);
-			i+=taillopt;
-			if (type==0) {
-				res.append("    IP Option: "+tab[type]+" ("+taillopt+" bytes)\n");
+			if (type>30) {
+				res.append("    IP Option: Invalide arret analyse option (valeur >30)\n");
 				return res.toString();
 			}
+			try {
+			if (type==0) {
+				res.append("    IP Option: "+tab[type]+" ("+0+" bytes)\n");
+				res.append("        Type: "+Integer.parseInt(hex,16)+"\n");
+				if ((""+bin.substring(0).charAt(0)).equals("1")) {
+					res.append("            "+bin.substring(0).charAt(0)+"... .... : Copy on fragmentation: Yes\n");
+				}else {
+					res.append("            "+bin.substring(0).charAt(0)+"... .... : Copy on fragmentation: No\n");
+				}
+				if ((bin.substring(1,3)).equals("00")){
+					res.append("            ."+bin.substring(1,3)+". .... : Class: Control (0)\n");
+				}else {
+					res.append("            ."+bin.substring(1,3)+". .... : Class: Unknown ("+Integer.parseInt(bin.substring(1,3),2)+")\n");
+				}
+				res.append("            ..."+bin.substring(3).charAt(0)+" "+bin.substring(4)+" : "+tab[type]+"\n");
+				res.append("        Longueur: "+0+"\n");
+				return res.toString();
+			}
+			int taillopt=Integer.parseInt(in[i+1],16);
 			res.append("    IP Option: "+tab[type]+" ("+taillopt+" bytes)\n");
+			res.append("        Type: "+Integer.parseInt(hex,16)+"\n");
+			if ((""+bin.substring(0).charAt(0)).equals("1")) {
+				res.append("            "+bin.substring(0).charAt(0)+"... .... : Copy on fragmentation: Yes\n");
+			}else {
+				res.append("            "+bin.substring(0).charAt(0)+"... .... : Copy on fragmentation: No\n");
+			}
+			if ((bin.substring(1,3)).equals("00")){
+				res.append("            ."+bin.substring(1,3)+". .... : Class: Control (0)\n");
+			}else {
+				res.append("            ."+bin.substring(1,3)+". .... : Class: Unknown ("+Integer.parseInt(bin.substring(1,3),2)+")\n");
+			}
+			res.append("            ..."+bin.substring(3).charAt(0)+" "+bin.substring(4)+" : "+tab[type]+"\n");
+			res.append("        Longueur: "+taillopt+"\n");
+			if (type==7) {
+				hex = in[i+2];
+				int pts=Integer.parseInt(hex,16);
+				res.append("        Pointer: "+pts+"\n");
+				int j=i+3;
+				while(j<i+taillopt) {
+					res.append("        Recorded Route: "+Integer.parseInt(in[j], 16)+"."+Integer.parseInt(in[j+1], 16)+"."+Integer.parseInt(in[j+2], 16)+"."+Integer.parseInt(in[j+3], 16)+"\n");
+					j+=4;
+				}
+				
+			}
+			i+=taillopt;
+		
+		}catch (Exception e) {
+			return res.toString();
+		}
 		}
 		return res.toString();
-		
 	}
 	
 	/**
@@ -413,7 +459,7 @@ public class Input_Parser {
 		for (int i=8;i<9;i++) {
 			tmp+=in[i];
 		}
-		res.append("TTL (Time to live): "+Integer.parseInt(tmp,16)+"| max 255 \n");
+		res.append("TTL (Time to live): "+Integer.parseInt(tmp,16)+" | max 255 \n");
 		//Fin Analyse TTL Debut Analyse Protocol
 		tmp ="";
 		for (int i=9;i<10;i++) {

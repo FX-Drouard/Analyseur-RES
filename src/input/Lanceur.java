@@ -35,7 +35,7 @@ public class Lanceur {
 		}catch (Exception e) {
 			//e.printStackTrace();
 			//e.getMessage();
-			return "Ethernet Error parsing";
+			return "Ethernet Error parsing "+e.getMessage();
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class Lanceur {
 		}catch (Exception e) {
 			//e.printStackTrace();
 			//e.getMessage();
-			return "IP Error Parsing";
+			return "IP Error Parsing "+e.getMessage();
 		}
 	}
 	
@@ -74,7 +74,7 @@ public class Lanceur {
 		}catch (Exception e) {
 			//e.printStackTrace();
 			//e.getMessage();
-			return "Error Parsing du protocole";
+			return "Error Parsing du protocole "+e.getMessage();
 		}
 		
 	}
@@ -109,7 +109,7 @@ public class Lanceur {
 		}catch (Exception e) {
 			//e.printStackTrace();
 			//e.getMessage();
-			return "Error Parsing de: "+this.dNameToString();
+			return "Error Parsing de: "+this.dNameToString()+" "+e.getMessage();
 		}
 		
 	}
