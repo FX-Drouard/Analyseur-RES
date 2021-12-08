@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1062,6 +1063,7 @@ public class Input_Parser {
 		
 		//hashmap containing all the visited words
 		Map<Integer,String> map=new HashMap<Integer,String>();
+		Map<Integer,String> rdata=new HashMap<Integer,String>();
 		
 		
 		res.append("\nQueries: \n");
@@ -1096,7 +1098,7 @@ public class Input_Parser {
 							int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 							//Start the recusive method
 							try {
-								String st=dnsRec(in,pt,map);
+								String st=dnsRec(in,pt,map,rdata);
 								res3.append(st);
 							}catch(StackOverflowError e) {
 								res3.append(" Could not read the name in the RDATA");
@@ -1222,6 +1224,7 @@ public class Input_Parser {
 		//Answer Part
 		if(rep >0) res.append("\nAnswer: \n");
 		for (int j=0;j<rep;j++) {
+			System.out.println(" j "+j);
 			res3=new StringBuilder();
 			int totlength=0;//total length of one anwser
 			int nbmots=0;//number of words in one answer
@@ -1241,21 +1244,30 @@ public class Input_Parser {
 					//Get the value of offset
 					
 					int pointer=Integer.parseInt(tmp.substring(2)+Input_Parser.hexToBin(in[i+1]),2);
-
+					
 					if(pointer>i) {
 
 						return "DNS Invalid Data\n";
+					}
+					//If the name is in rdata we need to get it instantly
+					if(rdata.containsKey(pointer)) {
+						System.out.println("i pass here yes");
+						res3.append(rdata.get(pointer));
+						i+=2;
+						break;
 					}
 					
 					//Get the name until 00
 					while (!(in[pointer].equals("00"))) {
 						
 						if(((hexToBin(in[pointer]).substring(0,2)).equals("11"))) {
+							
+							
 							int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 
 							//Start the recusive method
 							try {
-								String st=dnsRec(in,pt,map);
+								String st=dnsRec(in,pt,map,rdata);
 								res3.append(st);
 							}catch(StackOverflowError e) {
 								res3.append("   (not 100% accurate)");
@@ -1440,10 +1452,12 @@ public class Input_Parser {
 
 					res.append("        IPv6 Address : "+res3.toString()+"\n");
 				}else if (type==5) {
-					
+					List<Integer> intl=new ArrayList<>();
 					//CNAME
 					int ipc=0;
 					while (ipc<rdlength) {
+						//add the offset value in cname
+						
 						
 						boolean isC=false;
 						tmp = Input_Parser.hexToBin(in[i]);
@@ -1458,6 +1472,14 @@ public class Input_Parser {
 							if(pointer>=i) {
 								return "DNS Invalid Data pointerCname\n";
 							}
+							
+							//WE NEED TO GET THE ELEMENT IF IT'S IN RDATA BECAUSE WE DOES NOT KNOW THE END
+							if(rdata.containsKey(pointer)) {
+								System.out.println("i pass here yes in cname");
+								res3.append(rdata.get(pointer));
+								i+=2;
+								break;
+							}
 							//Get the name until 00
 							while (!(in[pointer].equals("00"))) {
 								
@@ -1467,7 +1489,7 @@ public class Input_Parser {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
 									try {
-										String st=dnsRec(in,pt,map);
+										String st=dnsRec(in,pt,map,rdata);
 										res3.append(st);
 									}catch(StackOverflowError e) {
 										res3.append("   (not 100% accurate)");
@@ -1489,8 +1511,9 @@ public class Input_Parser {
 								
 								
 							}
+							//Add a new key temporary
+							intl.add(i);
 							i+=2;
-							
 							ipc+=2;
 							
 							if(ipc>=rdlength) {
@@ -1508,6 +1531,7 @@ public class Input_Parser {
 							break;
 						}
 						
+						intl.add(i);
 						//Total length
 						int curlength=Integer.parseInt(in[i],16);
 						i++;
@@ -1519,7 +1543,8 @@ public class Input_Parser {
 							i++;
 						}
 						res3.append(Input_DHCP.hexToAscii(ra)+".");
-						map.put(index-1, Input_DHCP.hexToAscii(ra));
+						//map.put(index-1, Input_DHCP.hexToAscii(ra));
+						
 						ipc+=curlength+1;
 						
 					}
@@ -1530,7 +1555,18 @@ public class Input_Parser {
 					
 					
 					res.append("        CNAME : "+res3.toString()+"\n");
+					//We add here the different words corresponding to offset for RDATA CASE
+					
+					System.out.println("val "+res3.toString());
+					int specpt=0;
+					for(Integer iv:intl) {
+						rdata.put(iv, res3.toString().substring(specpt,res3.length()));
+						specpt+=Integer.parseInt(in[iv],16)+1;
+					}
+					
+					System.out.println(" i want "+rdata.keySet()+" rdata "+rdata.values());
 				}else if (type==2) {
+					List<Integer> intl=new ArrayList<>();
 					int ipc=0;
 					while (ipc<rdlength) {
 						boolean isC=false;
@@ -1546,6 +1582,15 @@ public class Input_Parser {
 							if(pointer>=i) {
 								return res.toString()+"\nDNS Invalid Data pointerCname\n";
 							}
+							//WE NEED TO GET THE ELEMENT IF IT'S IN RDATA BECAUSE WE DOES NOT KNOW THE END
+							if(rdata.containsKey(pointer)) {
+								System.out.println("i pass here yes in cname");
+								res3.append(rdata.get(pointer));
+								i+=2;
+								break;
+							}
+							
+							
 							//Get the name until 00
 							while (!(in[pointer].equals("00"))) {
 								
@@ -1553,7 +1598,7 @@ public class Input_Parser {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
 									try {
-										res3.append(dnsRec(in,pt,map));
+										res3.append(dnsRec(in,pt,map,rdata));
 									}catch(Exception e) {
 										return res.toString()+" name in rdata";
 									}
@@ -1573,6 +1618,8 @@ public class Input_Parser {
 								
 								
 							}
+							
+							intl.add(i);
 							i+=2;
 							ipc+=2;
 							if(ipc>=rdlength) {
@@ -1591,6 +1638,8 @@ public class Input_Parser {
 						
 						//Total length
 						int curlength=Integer.parseInt(in[i],16);
+						
+						intl.add(i);
 						i++;
 						String ra="";
 						int fin=i+curlength;
@@ -1609,7 +1658,13 @@ public class Input_Parser {
 					}
 					
 					res.append("        NS : "+res3.toString()+"\n");
+					int specpt=0;
+					for(Integer iv:intl) {
+						rdata.put(iv, res3.toString().substring(specpt,res3.length()));
+						specpt+=Integer.parseInt(in[iv],16)+1;
+					}
 				}else if (type==15) {
+					List<Integer> intl=new ArrayList<>();
 					int ipc=0;
 					res.append("        Preference : ("+(Integer.parseInt(in[i]+in[i+1],16))+")\n");
 					i+=2;
@@ -1628,6 +1683,15 @@ public class Input_Parser {
 							if(pointer>=i) {
 								return res.toString()+"\nDNS Invalid Data pointerCname\n";
 							}
+							
+							//WE NEED TO GET THE ELEMENT IF IT'S IN RDATA BECAUSE WE DO NOT KNOW THE END
+							if(rdata.containsKey(pointer)) {
+								System.out.println("i pass here yes in cname");
+								res3.append(rdata.get(pointer));
+								i+=2;
+								break;
+							}
+							
 							//Get the name until 00
 							while (!(in[pointer].equals("00"))) {
 
@@ -1637,7 +1701,7 @@ public class Input_Parser {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
 									try {
-										String st=dnsRec(in,pt,map);
+										String st=dnsRec(in,pt,map,rdata);
 										res3.append(st);
 									}catch(StackOverflowError e) {
 										res3.append("   (not 100% accurate)");
@@ -1658,6 +1722,8 @@ public class Input_Parser {
 								
 								
 							}
+							
+							intl.add(i);
 							i+=2;
 							ipc+=2;
 							if(ipc>=rdlength) {
@@ -1676,6 +1742,7 @@ public class Input_Parser {
 						
 						//Total length
 						int curlength=Integer.parseInt(in[i],16);
+						intl.add(i);
 						i++;
 						String ra="";
 						int fin=i+curlength;
@@ -1693,6 +1760,12 @@ public class Input_Parser {
 						res3.deleteCharAt(res3.length()-1);
 					}
 					res.append("        MX : "+res3.toString()+"\n");
+					
+					int specpt=0;
+					for(Integer iv:intl) {
+						rdata.put(iv, res3.toString().substring(specpt,res3.length()));
+						specpt+=Integer.parseInt(in[iv],16)+1;
+					}
 				}else {
 					i+=rdlength;
 				}
@@ -1747,7 +1820,7 @@ public class Input_Parser {
 
 							//Start the recusive method
 							try {
-								String st=dnsRec(in,pt,map);
+								String st=dnsRec(in,pt,map,rdata);
 								res3.append(st);
 							}catch(StackOverflowError e) {
 								res3.append("   (not 100% accurate)");
@@ -1957,7 +2030,7 @@ public class Input_Parser {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
 									try {
-										String st=dnsRec(in,pt,map);
+										String st=dnsRec(in,pt,map,rdata);
 										res3.append(st);
 									}catch(StackOverflowError e) {
 										res3.append("   (not 100% accurate)");
@@ -2040,7 +2113,7 @@ public class Input_Parser {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
 									try {
-										String st=dnsRec(in,pt,map);
+										String st=dnsRec(in,pt,map,rdata);
 										res3.append(st);
 									}catch(StackOverflowError e) {
 										res3.append("   (not 100% accurate)");
@@ -2125,7 +2198,7 @@ public class Input_Parser {
 									int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 									//Start the recusive method
 									try {
-										String st=dnsRec(in,pt,map);
+										String st=dnsRec(in,pt,map,rdata);
 										res3.append(st);
 									}catch(StackOverflowError e) {
 										res3.append("   (not 100% accurate)");
@@ -2234,7 +2307,7 @@ public class Input_Parser {
 
 								//Start the recusive method
 								try {
-									String st=dnsRec(in,pt,map);
+									String st=dnsRec(in,pt,map,rdata);
 									res3.append(st);
 								}catch(StackOverflowError e) {
 									res3.append("   (not 100% accurate)");
@@ -2444,7 +2517,7 @@ public class Input_Parser {
 										int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 										//Start the recusive method
 										try {
-											String st=dnsRec(in,pt,map);
+											String st=dnsRec(in,pt,map,rdata);
 											res3.append(st);
 										}catch(StackOverflowError e) {
 											res3.append("   (not 100% accurate)");
@@ -2527,7 +2600,7 @@ public class Input_Parser {
 										int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 										//Start the recusive method
 										try {
-											String st=dnsRec(in,pt,map);
+											String st=dnsRec(in,pt,map,rdata);
 											res3.append(st);
 										}catch(StackOverflowError e) {
 											res3.append("   (not 100% accurate)");
@@ -2611,7 +2684,7 @@ public class Input_Parser {
 										int pt=Integer.parseInt(in[pointer].substring(2)+hexToBin(in[pointer+1]),2);
 										//Start the recusive method
 										try {
-											String st=dnsRec(in,pt,map);
+											String st=dnsRec(in,pt,map,rdata);
 											res3.append(st);
 										}catch(StackOverflowError e) {
 											res3.append("   (not 100% accurate)");
@@ -2693,25 +2766,28 @@ public class Input_Parser {
 	 * @param map: la map contenant 
 	 * @return Le String de DNS
 	 */
-	private static String dnsRec(String[] in, int pt,Map<Integer,String> map) {
+	private static String dnsRec(String[] in, int pt,Map<Integer,String> map,Map<Integer,String> map2) {
 		StringBuilder res = new StringBuilder();
-			if(in[pt].equals("00")) { 
-				return "";
-			}else if(hexToBin(in[pt]).substring(0,2).equals("11")) {
-				int pt2=Integer.parseInt((hexToBin(in[pt]).substring(2)+hexToBin(in[pt+1])),2);
-				res.append(dnsRec(in,pt2,map)+"."+dnsRec(in,pt+2,map));
+		if(map2.containsKey(pt)) {
+			//This is the very special case of rdata so we do not loop infinitely
+			return map2.get(pt);
+		}else if(in[pt].equals("00")) { 
+			return "";
+		}else if(hexToBin(in[pt]).substring(0,2).equals("11")) {
+			int pt2=Integer.parseInt((hexToBin(in[pt]).substring(2)+hexToBin(in[pt+1])),2);
+			res.append(dnsRec(in,pt2,map,map2)+"."+dnsRec(in,pt+2,map,map2));
 	
+			return res.toString();
+		}else {
+			if(map.containsKey(pt)) {
+				res.append(map.get(pt)+"."+dnsRec(in,1+pt+Integer.parseInt(in[pt],16),map,map2));
 				return res.toString();
 			}else {
-				if(map.containsKey(pt)) {
-					res.append(map.get(pt)+"."+dnsRec(in,1+pt+Integer.parseInt(in[pt],16),map));
-					return res.toString();
-				}else {
-					//We try to get an inexisting value
-					
-					return "Invalid";
-				}
+				//We try to get an inexisting value
+				
+				return "Invalid";
 			}
+		}
 		
 	}
 	
