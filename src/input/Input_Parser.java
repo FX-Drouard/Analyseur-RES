@@ -57,7 +57,11 @@ public class Input_Parser {
 					if(isHex(tmps[0])) {
 						if(Integer.parseInt(tmps[0],16)==cptOc) {
 						}else {
-							throw new RuntimeException("Offset Invalide ou Ligne incomple'te à la ligne : "+(numL-1));
+							if(numL>1){
+								throw new RuntimeException("L'offset de la ligne "+numL+" ne correspond pas au nombre d'octets de la ligne : "+(numL-1));
+							}else {
+								throw new RuntimeException("L'offset de la ligne 2 ne correspond pas au nombre d'octets de la ligne : "+numL);
+							}
 						}
 					}
 				}else {
@@ -250,7 +254,7 @@ public class Input_Parser {
 	 * @return L'analyse de Ethernet
 	 */
 	public static String ethernetToString(String[] in) throws RuntimeException{
-		if (in.length!=14) {throw new RuntimeException("Appel erron'e ethernetToString");}
+		if (in.length!=14) {throw new RuntimeException("Appel erroné ethernetToString");}
 		StringBuilder res= new StringBuilder();
 		res.append("Destination: ");
 		for (int i=0;i<6;i++) {
@@ -279,7 +283,7 @@ public class Input_Parser {
 	/**
 	 * Permet d'obtenir à partir d'un tableau total de trame, la partie entête-IP
 	 * @param in: le tableau à filtrer
-	 * @return Le tableau de String de l'entête-ip
+	 * @return Le tableau de String de léntête-ip
 	 */
 	public static String[] ipHData(String[] in) {
 		String[] res= new String[20];
@@ -297,7 +301,7 @@ public class Input_Parser {
 	 * @return L'analyse du nombre d'options de IP
 	 */
 	public static int getIpOptTaille(String[] in) {
-		if (in.length!=20) {throw new RuntimeException("Appel erron'e getIpOptTaille");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné getIpOptTaille");}
 		String tmp=in[0];
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		return tailleH*4-20;
@@ -324,7 +328,7 @@ public class Input_Parser {
 	 * @return L'analyse de Option IP
 	 */
 	public static String ipOptToString(String[] in,int taille) {
-		if (in.length!=taille) {throw new RuntimeException("Appel erron'e ipOptToString");}
+		if (in.length!=taille) {throw new RuntimeException("Appel erroné ipOptToString");}
 		String[] tab= {"End of Options List","No Operation","Security","Loose Source Route","Time Stamp","Extended Security","Commercial Security","Record Route","Stream ID","Strict Source Route","Experimental Measurement","MTU Probe","MTU Reply","Experimental Flow Control","Experimental Access Control","ENCODE","IMI Traffic Descriptor","Extended Internet Protocol","Traceroute","Address Extension","Router Alert","Selective Directed Broadcast","Unassigned (Released 18 October 2005)","Dynamic Packet State","Upstream Multicast Pkt.","Quick-Start","Unassigned","Unassigned","Unassigned","Unassigned","RFC3692-style Experiment"};
 		int i=0;
 		StringBuilder res=new StringBuilder().append("\nOption IP List:\n");
@@ -399,7 +403,7 @@ public class Input_Parser {
 	 * @return L'analyse de IP Header
 	 */
 	public static String ipHToString(String[] in) throws RuntimeException{
-		if (in.length!=20) {throw new RuntimeException("Appel erron'e ipHToString");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
 		StringBuilder res= new StringBuilder();
 		String tmp=in[0];
 		//Debut analyse Version
@@ -412,12 +416,12 @@ public class Input_Parser {
 		//Fin Analyse Version et Debut Analyse Taille
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		if (tailleH==5) {
-			res.append("Taille de l'entete (aucune option specifi'ee): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
+			res.append("Taille de léntete (aucune option specifiée): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
 		}else if (tailleH>5){
-			res.append("Taille de l'entete avec option: "+tailleH*4+" \n");
-		}else {throw new RuntimeException("Taille de l'entete totalement invalide!");}
+			res.append("Taille de léntete avec option: "+tailleH*4+" \n");
+		}else {throw new RuntimeException("Taille de léntete totalement invalide!");}
 		//Fin Analyse Taille et Debut Analyse TOS
-		res.append("TOS: Non Utilis'e dans notre cadre: 0x"+in[1]+"\n");
+		res.append("TOS: Non Utilisé dans notre cadre: 0x"+in[1]+"\n");
 		//Fin Analyse TOS et Debut Analyse Taille total
 		tmp ="";
 		for (int i=2;i<4;i++) {
@@ -446,14 +450,14 @@ public class Input_Parser {
 		for (int i=0;i<3;i++) {
 			flags+=bin.charAt(i);
 		}
-		res.append("Flags\n    Champ R'eserv'e: "+flags.charAt(0)+"\n    Champ DF: "+flags.charAt(1)+"\n    Champ MF: "+flags.charAt(2)+"\n");
+		res.append("Flags\n    Champ Réservé: "+flags.charAt(0)+"\n    Champ DF: "+flags.charAt(1)+"\n    Champ MF: "+flags.charAt(2)+"\n");
 		int offset;
 		{String off="";
 		for (int i=3;i<bin.length();i++) {
 			off+=bin.charAt(i);
 		}
 		offset=Integer.parseInt(off,2);}
-		if (offset==0) {res.append("Offset : 0, Paquet non Fragment'e\n");}else {res.append("Offset: "+offset+" Paquet Fragment'e\n");}
+		if (offset==0) {res.append("Offset : 0, Paquet non Fragmenté\n");}else {res.append("Offset: "+offset+" Paquet Fragmenté\n");}
 		//Fin analyse Offset+flags Debut analyse TTL
 		tmp ="";
 		for (int i=8;i<9;i++) {
@@ -540,7 +544,7 @@ public class Input_Parser {
 	 * @return Le nom du protocole
 	 */
 	public static String protocolenameToString(String[] in ) {
-		if (in.length!=20) {throw new RuntimeException("Appel erron'e ipHToString");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné ipHToString");}
 		String tmp ="";
 		for (int i=9;i<10;i++) {
 			tmp+=in[i];
@@ -605,7 +609,7 @@ public class Input_Parser {
 	 * @return L'indice de l'octet de debut de protocoles
 	 */
 	public static int protocoleHStartByIP(String [] in) {
-		if (in.length!=20) {throw new RuntimeException("Appel erron'e protocoleStartByIP");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné protocoleStartByIP");}
 		String tmp = in[0];
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		return 4*tailleH+14;
@@ -617,7 +621,7 @@ public class Input_Parser {
 	 * @return L'analyse de UDP
 	 */
 	public static String protocoleHToString(String[] in) {
-		if (in.length!=8) {throw new RuntimeException("Appel erron'e protocoleToString");}
+		if (in.length!=8) {throw new RuntimeException("Appel erroné protocoleToString");}
 		StringBuilder res= new StringBuilder();
 		String tmp =in[0];
 		tmp=tmp+in[1];
@@ -642,7 +646,7 @@ public class Input_Parser {
 	 * @return La longueur de udp
 	 */
 	public static int udpLong(String [] in) {
-		if (in.length!=8) {throw new RuntimeException("Appel erron'e udpLong");}
+		if (in.length!=8) {throw new RuntimeException("Appel erroné udpLong");}
 		String tmp = in[4]+in[5];
 		return Integer.parseInt(tmp,16);
 	}
@@ -653,7 +657,7 @@ public class Input_Parser {
 	 * @return Le nom de DNS ou DHCP
 	 */
 	public static String dNameToString(String[] in){
-		if (in.length!=8) {throw new RuntimeException("Appel erron'e protocoleToString");}
+		if (in.length!=8) {throw new RuntimeException("Appel erroné protocoleToString");}
 		String tmp =in[0];
 		tmp=tmp+in[1];
 		if ((Integer.parseInt(tmp,16)==67)||(Integer.parseInt(tmp,16)==68)) {
@@ -669,7 +673,7 @@ public class Input_Parser {
 			}
 			else if (Integer.parseInt(tmp,16)==53) {
 				return "DNS";
-		}else { return "DNS/DHCP non pr'esent";}}
+		}else { return "DNS/DHCP non présent";}}
 	}
 	
 	/**
@@ -678,7 +682,7 @@ public class Input_Parser {
 	 * @return L'indice de l'octet de debut de DHCP/DNS
 	 */
 	public static int dStartByIP(String [] in) {
-		if (in.length!=20) {throw new RuntimeException("Appel erron'e dStartByIP");}
+		if (in.length!=20) {throw new RuntimeException("Appel erroné dStartByIP");}
 		String tmp = in[0];
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		return 4*tailleH+14+8;
@@ -705,7 +709,7 @@ public class Input_Parser {
 	 * @return L'analyse de DHCP
 	 */
 	public static String dhcpToString(String[] in, int taille) {
-		if (in.length!=taille) {throw new RuntimeException("Appel erron'e dhcpToString");}
+		if (in.length!=taille) {throw new RuntimeException("Appel erroné dhcpToString");}
 		StringBuilder res= new StringBuilder();
 		//StringBuilder res2= new StringBuilder();res2.append("DHCP Message Type: Unknown\n");
 		String tmp=in[0];
@@ -913,11 +917,11 @@ public class Input_Parser {
 				}
 				
 				
-				//Attention il faut incr'ementer de 2 pour commencer au bon endroit
+				//Attention il faut incrémenter de 2 pour commencer au bon endroit
 				i+=len+2;
 			}
 		}catch (Exception e){
-			return res.toString()+"Paquet DHCP malform'e!\n";
+			return res.toString()+"Paquet DHCP malformé!\n";
 		}
 		//Padding
 		if(lastind>240) {
@@ -946,7 +950,7 @@ public class Input_Parser {
 	 * @return L'analyse de DNS
 	 */
 	public static String dnsToString(String[] in, int taille) {
-		if (in.length!=taille) {throw new RuntimeException("Appel erron'e dhcpToString");}
+		if (in.length!=taille) {throw new RuntimeException("Appel erroné dhcpToString");}
 		StringBuilder res=new StringBuilder();
 		res.append("Transaction id: 0x"+in[0]+in[1]+"\n");
 		//flags
@@ -1821,7 +1825,7 @@ public class Input_Parser {
 			}
 		}
 		
-		//System.out.println("Fin des r'eponses");
+		//System.out.println("Fin des réponses");
 		//System.out.println(" "+res.toString());
 
 		
