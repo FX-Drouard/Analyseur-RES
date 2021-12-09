@@ -34,6 +34,6 @@
 > Avant de commencer a analysé vos fichier, nous vous conseillons de regarder si le logiciel arrive a decoder la trame: "./data/exemple7.txt" et "./data/exemple8.txt"
 
 ## Lancement depuis les sources:
-> Vous devez avoir la jdk 16 ou plus.
+> Vous devez avoir la Java SE 1.8 ou plus.
 
 > Avec le logiciel eclipse ou idea, lancez la class "Gui"
