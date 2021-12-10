@@ -283,7 +283,7 @@ public class Input_Parser {
 	/**
 	 * Permet d'obtenir à partir d'un tableau total de trame, la partie entête-IP
 	 * @param in: le tableau à filtrer
-	 * @return Le tableau de String de léntête-ip
+	 * @return Le tableau de String de l'entête-ip
 	 */
 	public static String[] ipHData(String[] in) {
 		String[] res= new String[20];
@@ -416,10 +416,10 @@ public class Input_Parser {
 		//Fin Analyse Version et Debut Analyse Taille
 		int tailleH = Integer.parseInt(String.valueOf(tmp.charAt(1)),16);
 		if (tailleH==5) {
-			res.append("Taille de léntete (aucune option specifiée): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
+			res.append("Taille de l'entete (aucune option specifiée): "+tailleH*4+" (0x"+String.valueOf(tmp.charAt(1))+")\n");
 		}else if (tailleH>5){
-			res.append("Taille de léntete avec option: "+tailleH*4+" \n");
-		}else {throw new RuntimeException("Taille de léntete totalement invalide!");}
+			res.append("Taille de l'entete avec option: "+tailleH*4+" \n");
+		}else {throw new RuntimeException("Taille de l'entete totalement invalide!");}
 		//Fin Analyse Taille et Debut Analyse TOS
 		res.append("TOS: Non Utilisé dans notre cadre: 0x"+in[1]+"\n");
 		//Fin Analyse TOS et Debut Analyse Taille total
