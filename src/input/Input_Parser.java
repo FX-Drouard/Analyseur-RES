@@ -63,6 +63,8 @@ public class Input_Parser {
 								throw new RuntimeException("L'offset de la ligne 2 ne correspond pas au nombre d'octets de la ligne : "+numL);
 							}
 						}
+					}else {
+						continue;
 					}
 				}else {
 					continue;
