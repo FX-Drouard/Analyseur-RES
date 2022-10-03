@@ -1,3 +1,10 @@
+# Preambule
+### Pourquois ce Projet:
+> Ce projet à été créé afin de realisé le projet de l'UE LU3IN033 de Sorbonne Universite: Faire un analyseur de trame hexadecimal réseau avec encapsulation Ethernet en traitant la couche Ethernet, IP, UDP, DHCP et DNS.
+
+### Que puis-je faire de ce projet?
+> Vous pouvez l'utilisé pour comprendre le fonctionnement d'une trame réseau mais aussi vous pouvez regarder comment est coder ce dernier et l'amilioré si vous le souhaitez en creant un "fork" du projet.
+
 # Instruction de mise en place:
 ## Instruction de lancement:
 ### Faire attention:
